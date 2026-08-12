@@ -67,16 +67,16 @@
   }
   .hero-top{
     display:flex;
-    align-items:flex-start;
-    gap:26px;
+    align-items:center;
+    gap:32px;
     flex-wrap:wrap;
   }
   .avatar{
-    width:96px;height:96px;
+    width:148px;height:148px;
     border-radius:50%;
     object-fit:cover;
-    border:2px solid var(--gold);
-    box-shadow:0 0 0 5px rgba(201,138,44,0.15);
+    border:3px solid var(--gold);
+    box-shadow:0 0 0 6px rgba(201,138,44,0.15);
     flex-shrink:0;
   }
   .hero-text{flex:1;min-width:240px;}
@@ -351,6 +351,8 @@
     .scorecard{grid-template-columns:repeat(2,1fr);}
     .twocol{grid-template-columns:1fr;}
     .navlinks{display:none;}
+    .avatar{width:96px;height:96px;}
+    .hero-top{gap:20px;}
   }
 
   @media (prefers-reduced-motion: reduce){
