@@ -65,6 +65,21 @@
     color:var(--paper);
     padding:64px 0 56px;
   }
+  .hero-top{
+    display:flex;
+    align-items:flex-start;
+    gap:26px;
+    flex-wrap:wrap;
+  }
+  .avatar{
+    width:96px;height:96px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid var(--gold);
+    box-shadow:0 0 0 5px rgba(201,138,44,0.15);
+    flex-shrink:0;
+  }
+  .hero-text{flex:1;min-width:240px;}
   .ticket-badge{
     display:inline-flex;align-items:center;gap:8px;
     font-family:var(--font-mono);
@@ -360,13 +375,18 @@
 
 <header class="hero">
   <div class="wrap">
-    <span class="ticket-badge"><span class="dot"></span>CASE #JXA-2026 · STATUS: OPEN TO WORK</span>
-    <h1>Jade Xyrus Abejero</h1>
-    <p class="role">Customer Service, Sales &amp; Operations Specialist</p>
-    <p class="pitch">4+ years turning frustrated calls into resolved accounts — now looking to bring that same discipline to e-commerce operations, claims, and case management.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="#contact">Get in touch</a>
-      <a class="btn btn-secondary" href="#experience">See my track record</a>
+    <div class="hero-top">
+      <img class="avatar" src="profile.png" alt="Jade Xyrus Abejero">
+      <div class="hero-text">
+        <span class="ticket-badge"><span class="dot"></span>CASE #JXA-2026 · STATUS: OPEN TO WORK</span>
+        <h1>Jade Xyrus Abejero</h1>
+        <p class="role">Customer Service, Sales &amp; Operations Specialist</p>
+        <p class="pitch">4+ years turning frustrated calls into resolved accounts — now looking to bring that same discipline to e-commerce operations, claims, and case management.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#contact">Get in touch</a>
+          <a class="btn btn-secondary" href="#experience">See my track record</a>
+        </div>
+      </div>
     </div>
   </div>
 </header>
