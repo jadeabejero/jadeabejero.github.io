@@ -415,17 +415,27 @@
   .bleed-wrap{position:relative;}
   .bleed-photo{
     position:absolute;
-    right:24px;
+    right:-6px;
     bottom:0;
-    width:min(380px, calc((100vw - 976px) / 2 - 48px));
+    width:38vw;
+    min-width:100px;
+    max-width:170px;
     height:auto;
     z-index:3;
     pointer-events:none;
-    filter:drop-shadow(0 26px 40px rgba(4,9,22,0.45));
+    filter:drop-shadow(0 16px 28px rgba(4,9,22,0.4));
   }
 
-  @media (max-width:1470px){
-    .bleed-photo{display:none;}
+  @media (min-width:640px){
+    .bleed-photo{width:30vw;max-width:230px;right:6px;}
+  }
+
+  @media (min-width:1000px){
+    .bleed-photo{width:26vw;max-width:300px;right:max(20px, calc((100vw - 976px) / 2 - 30px));}
+  }
+
+  @media (min-width:1400px){
+    .bleed-photo{max-width:360px;}
   }
 
   @media (max-width:760px){
