@@ -71,16 +71,31 @@
   .hero-top{
     display:flex;
     align-items:center;
-    gap:32px;
+    gap:40px;
     flex-wrap:wrap;
   }
-  .avatar{
-    width:148px;height:148px;
-    border-radius:50%;
-    object-fit:cover;
-    border:3px solid var(--gold);
-    box-shadow:0 0 0 6px rgba(201,138,44,0.15);
+  .avatar-frame{
+    position:relative;
     flex-shrink:0;
+    width:232px;
+  }
+  .avatar-frame::before{
+    content:"";
+    position:absolute;
+    inset:-11px;
+    border:1px solid rgba(201,138,44,0.55);
+    border-radius:18px;
+    z-index:0;
+  }
+  .avatar{
+    position:relative;
+    z-index:1;
+    display:block;
+    width:232px;height:280px;
+    border-radius:12px;
+    object-fit:cover;
+    border:6px solid var(--paper-card);
+    box-shadow:0 28px 52px -18px rgba(4,9,22,0.6), 0 0 0 1px rgba(18,33,61,0.06);
   }
   .hero-text{flex:1;min-width:240px;}
   .ticket-badge{
@@ -401,7 +416,8 @@
     .twocol{grid-template-columns:1fr;}
     .navlinks{display:none;}
     .hero-top{flex-direction:column;align-items:flex-start;gap:18px;}
-    .avatar{width:104px;height:104px;}
+    .avatar-frame{width:150px;}
+    .avatar{width:150px;height:184px;border-width:4px;border-radius:8px;}
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -436,7 +452,9 @@
 <header class="hero">
   <div class="wrap">
     <div class="hero-top">
-      <img class="avatar" src="profile.png" alt="Jade Xyrus Abejero, headshot in a dark suit">
+      <div class="avatar-frame">
+        <img class="avatar" src="profile.png" alt="Jade Xyrus Abejero, headshot in a dark suit">
+      </div>
       <div class="hero-text">
         <span class="ticket-badge"><span class="dot"></span>CASE #JXA-2026 · STATUS: OPEN TO WORK</span>
         <h1>Jade Xyrus Abejero</h1>
