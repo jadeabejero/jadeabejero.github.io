@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Tool: Inbox Triage Desk — Jade Xyrus Abejero</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='31' fill='%2312213D'/%3E%3Ccircle cx='32' cy='32' r='27' fill='none' stroke='%23C98A2C' stroke-width='2'/%3E%3Ctext x='32' y='38' text-anchor='middle' font-family='monospace' font-size='20' font-weight='700' fill='%23EEF1F5'%3EJXA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/samples.css">
+<style>
+  .tool-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:4px 0 18px}
+  .tbtn{font-family:'IBM Plex Mono',monospace;font-size:13px;padding:10px 16px;border-radius:3px;border:1px solid #12213D;background:#12213D;color:#EEF1F5;cursor:pointer}
+  .tbtn:hover{background:#22355C}
+  .tbtn.ghost{background:transparent;color:#12213D}
+  .tbtn.ghost:hover{background:#E4E9F0}
+  .tbtn:focus-visible,.tin:focus-visible{outline:2px solid #C98A2C;outline-offset:2px}
+  .counter{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#3A4A6B}
+  .lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+  .lane{background:#fff;border:1px solid #D6DCE6;border-radius:6px;padding:12px;min-width:0}
+  .lane h3{font-family:'Space Grotesk',sans-serif;font-size:15px;margin:0 0 2px;display:flex;justify-content:space-between;gap:8px}
+  .lane h3 .n{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#3A4A6B}
+  .lane .act{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#3A4A6B;margin-bottom:10px;line-height:1.45}
+  .lane[data-k=client]{border-top:4px solid #B3412E}
+  .lane[data-k=finance]{border-top:4px solid #C98A2C}
+  .lane[data-k=sched]{border-top:4px solid #2E7D6B}
+  .lane[data-k=reading]{border-top:4px solid #8FA0C2}
+  .lane[data-k=noise]{border-top:4px solid #B9C2D0}
+  .mail{border:1px solid #E1E6EE;border-radius:4px;padding:8px 10px;margin-bottom:8px;background:#FAFBFD;font-size:13.5px;line-height:1.4;animation:drop .35s ease both}
+  .mail b{display:block;font-family:'Space Grotesk',sans-serif;font-size:13.5px;overflow-wrap:anywhere}
+  .mail .from{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#3A4A6B;overflow-wrap:anywhere}
+  .mail .why{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#2E7D6B;margin-top:4px}
+  @keyframes drop{from{opacity:.2;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.mail{animation:none}}
+  .inbox-list{background:#fff;border:1px solid #D6DCE6;border-radius:6px}
+  .inbox-row{display:grid;grid-template-columns:minmax(0,190px) minmax(0,1fr);gap:12px;padding:9px 14px;border-bottom:1px solid #EEF1F5;font-size:14px}
+  .inbox-row:last-child{border-bottom:0}
+  .inbox-row .f{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#3A4A6B;overflow-wrap:anywhere}
+  .inbox-row .s{overflow-wrap:anywhere}
+  .try{display:grid;grid-template-columns:1fr 1.4fr auto;gap:10px;align-items:end}
+  .try label{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#3A4A6B;display:block;margin-bottom:4px}
+  .tin{width:100%;font:inherit;font-size:14.5px;padding:9px 11px;border:1px solid #C5CEDB;border-radius:3px;background:#fff;color:#12213D}
+  .verdict{margin-top:14px;padding:12px 14px;border-radius:4px;background:#DCEEE9;font-size:14.5px;display:none}
+  .verdict.on{display:block}
+  .verdict b{font-family:'Space Grotesk',sans-serif}
+  @media (max-width:640px){.try{grid-template-columns:1fr}.inbox-row{grid-template-columns:1fr;gap:2px}}
+</style>
+</head>
+<body>
+
+<nav class="docbar">
+  <div class="docbar-inner">
+    <a class="brand" href="../index.html"><strong>XYRUS</strong> ABEJERO · LIVE TOOL</a>
+    <a class="backlink" href="../index.html#built">← Back to Built with AI</a>
+  </div>
+</nav>
+
+<main class="doc">
+
+  <div class="doc-head">
+    <span class="filetag">LIVE TOOL · VIBE-CODED WITH CLAUDE · WORKS IN YOUR BROWSER</span>
+    <h1>Inbox Triage Desk</h1>
+    <p class="brief">The triage rules from my Email Management case file, turned into a tool that actually runs. Press the button and watch a messy inbox sort itself, or type in your own email and see where it lands and why.</p>
+    <div class="context">
+      <span>BUILT WITH: <b>Claude</b></span>
+      <span>RULES FROM: <b>Case File EM-01</b></span>
+      <span>PRIVACY: <b>Nothing you type leaves this page</b></span>
+    </div>
+  </div>
+
+  <h2 class="sect">1 · The inbox</h2>
+  <div class="tool-bar">
+    <button class="tbtn" id="run" type="button">Run triage</button>
+    <button class="tbtn ghost" id="reset" type="button">Reset inbox</button>
+    <span class="counter" id="count" aria-live="polite">14 unread · 0 sorted</span>
+  </div>
+  <div class="inbox-list" id="inbox"></div>
+  <div class="lanes" id="lanes" hidden></div>
+
+  <h2 class="sect">2 · Try your own email</h2>
+  <div class="panel">
+    <form class="try" id="tryForm">
+      <div><label for="tFrom">From (email address)</label><input class="tin" id="tFrom" placeholder="billing@vendor.com" autocomplete="off"></div>
+      <div><label for="tSubj">Subject line</label><input class="tin" id="tSubj" placeholder="Invoice #2291 — payment due Friday" autocomplete="off"></div>
+      <button class="tbtn" type="submit">Sort it</button>
+    </form>
+    <div class="verdict" id="verdict" aria-live="polite"></div>
+  </div>
+
+  <h2 class="sect">3 · How it decides</h2>
+  <div class="panel">
+    <p style="margin:0">Rules run top to bottom, and the first match wins, the same way Gmail filters do. Clients are checked first on purpose: an urgent message from a client that happens to mention an invoice should go to the person, not the bookkeeper. Anything no rule catches stays in the inbox for a human, because a triage system that guesses is worse than one that admits it doesn't know.</p>
+  </div>
+
+  <div class="docfoot">Sample inbox uses invented senders. <a href="../index.html#built">Back to portfolio</a></div>
+</main>
+
+<script>
+const CLIENT_DOMAINS = ['brightlane.co','harborpoint.io','kestrelhomes.com'];
+const LANES = [
+  {k:'client', name:'Client', act:'Label + notify phone · reply < 2 h',
+   test:(f,s)=>{const d=f.split('@')[1]||''; if(CLIENT_DOMAINS.includes(d)) return 'known client domain @'+d; return null;}},
+  {k:'finance', name:'Finance', act:'Label + forward to bookkeeper · same day',
+   test:(f,s)=>{const m=s.match(/invoice|payment|overdue|receipt|billing|statement/i); if(m) return 'subject mentions "'+m[0].toLowerCase()+'"'; if(/^(billing|accounts|ar|finance)@/i.test(f)) return 'finance sender address'; return null;}},
+  {k:'sched', name:'Scheduling', act:'Label + propose 2 slots · reply < 4 h',
+   test:(f,s)=>{const m=s.match(/meeting|call|schedule|reschedul|invite|calendar|availability|sync/i); return m?'subject mentions "'+m[0].toLowerCase()+'"':null;}},
+  {k:'reading', name:'Reading', act:'Skip inbox · Friday digest',
+   test:(f,s)=>{if(/^(newsletter|news|digest|hello|team)@/i.test(f)) return 'bulk sender address'; const m=s.match(/newsletter|weekly|digest|edition|issue #/i); return m?'looks like a newsletter ("'+m[0].toLowerCase()+'")':null;}},
+  {k:'noise', name:'Noise', act:'Archive instantly · no reply needed',
+   test:(f,s)=>{if(/^(no-?reply|notifications?|alerts?|do-not-reply)@/i.test(f)) return 'automated sender'; const m=s.match(/sale|% off|promo|liked your|new follower|password changed/i); return m?'promotional or alert ("'+m[0].toLowerCase()+'")':null;}}
+];
+const SAMPLE = [
+  ['maria@brightlane.co','Launch deck — need your sign-off by 3pm'],
+  ['billing@cloudhost.net','Invoice #4471 overdue — service pauses in 3 days'],
+  ['newsletter@saasweekly.com','SaaS Weekly — Issue #212'],
+  ['no-reply@linkedin.com','Ana Cruz and 4 others liked your post'],
+  ['dan@harborpoint.io','Quick question about the contract renewal'],
+  ['ops@vendorhub.ph','Can we reschedule Thursday\'s call?'],
+  ['deals@shopmart.com','48-hour sale: 30% off office chairs'],
+  ['accounts@printco.ph','Payment receipt — Order 8812'],
+  ['lea@kestrelhomes.com','Site visit photos + next steps'],
+  ['hello@founderdigest.co','The Founder Digest: 5 hiring mistakes'],
+  ['ramon@partnerlabs.com','Meeting invite: Q4 partnership sync'],
+  ['alerts@bank-notify.com','Password changed on your account'],
+  ['jo@consultant.me','Thoughts on the proposal draft?'],
+  ['finance@brightlane.co','Statement for October attached']
+];
+function classify(f,s){ f=(f||'').trim().toLowerCase(); s=(s||'').trim();
+  for(const L of LANES){const why=L.test(f,s); if(why) return {lane:L,why};}
+  return {lane:null,why:'no rule matched'}; }
+const esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const inbox=document.getElementById('inbox'), lanes=document.getElementById('lanes'), count=document.getElementById('count');
+function showInbox(){ lanes.hidden=true; inbox.hidden=false;
+  inbox.innerHTML=SAMPLE.map(([f,s])=>`<div class="inbox-row"><span class="f">${esc(f)}</span><span class="s">${esc(s)}</span></div>`).join('');
+  count.textContent=SAMPLE.length+' unread · 0 sorted'; }
+function run(){ const groups={}; let left=[];
+  SAMPLE.forEach(([f,s])=>{const r=classify(f,s); if(r.lane){(groups[r.lane.k]=groups[r.lane.k]||[]).push([f,s,r.why]);} else left.push([f,s,r.why]);});
+  let html=LANES.map(L=>{const g=groups[L.k]||[]; return `<div class="lane" data-k="${L.k}"><h3>${L.name}<span class="n">${g.length}</span></h3><div class="act">${L.act}</div>${g.map(([f,s,w],i)=>`<div class="mail" style="animation-delay:${i*90}ms"><b>${esc(s)}</b><span class="from">${esc(f)}</span><div class="why">↳ ${esc(w)}</div></div>`).join('')}</div>`;}).join('');
+  if(left.length) html+=`<div class="lane"><h3>Needs a human<span class="n">${left.length}</span></h3><div class="act">Stays in inbox · I read it myself</div>${left.map(([f,s])=>`<div class="mail"><b>${esc(s)}</b><span class="from">${esc(f)}</span><div class="why">↳ no rule matched</div></div>`).join('')}</div>`;
+  lanes.innerHTML=html; inbox.hidden=true; lanes.hidden=false;
+  count.textContent='0 unread · '+(SAMPLE.length-left.length)+' sorted · '+left.length+' flagged for a human'; }
+document.getElementById('run').addEventListener('click',run);
+document.getElementById('reset').addEventListener('click',showInbox);
+document.getElementById('tryForm').addEventListener('submit',e=>{e.preventDefault();
+  const f=document.getElementById('tFrom').value, s=document.getElementById('tSubj').value, v=document.getElementById('verdict');
+  if(!f.trim()&&!s.trim()){v.className='verdict on';v.innerHTML='Type a sender or a subject first.';return;}
+  const r=classify(f,s); v.className='verdict on';
+  v.innerHTML = r.lane ? `Goes to <b>${r.lane.name}</b> because the ${esc(r.why)}. Next step: ${esc(r.lane.act)}.` : `<b>Stays in the inbox for a human.</b> No rule matched, so I'd read it myself rather than guess.`;
+});
+showInbox();
+</script>
+</body>
+</html>
