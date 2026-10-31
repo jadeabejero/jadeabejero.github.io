@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample: Call QA &amp; Coaching Scorecard — Jade Xyrus Abejero</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2313233F'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='28' fill='%23F7F5F0' text-anchor='middle'%3EJX%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/samples.css">
+</head>
+<body>
+
+<nav class="docbar">
+  <div class="docbar-inner">
+    <a class="brand" href="../index.html"><strong>XYRUS</strong> ABEJERO · SAMPLE WORK</a>
+    <a class="backlink" href="../index.html#cases">← Back to Case Files</a>
+  </div>
+</nav>
+
+<main class="doc">
+
+  <div class="doc-head">
+    <span class="filetag">FILE QA-09 · CALL QA &amp; COACHING · SAMPLE WORK PRODUCT</span>
+    <h1>Call QA &amp; Coaching Scorecard</h1>
+    <p class="brief">A small support team records every call but nobody has time to review them. I set up a scoring rubric, reviewed three calls with AI-assisted transcripts, and turned the scores into coaching each agent can act on this week.</p>
+    <div class="context">
+      <span>SCENARIO: <b>5-agent home-internet support team, ~250 calls/week</b></span>
+      <span>TOOLS: <b>Whisper transcripts · Claude · Google Sheets</b></span>
+      <span>TIMEFRAME: <b>Setup 1 day, then ~2 hrs/week</b></span>
+    </div>
+  </div>
+
+  <h2 class="sect">1 · The problem</h2>
+  <div class="panel">
+    <p style="margin:0 0 10px;">The team lead can listen to maybe 5 calls a week, so coaching runs on gut feel. Customers who threaten to cancel get very different handling depending on who picks up, and nobody can say why some agents save more accounts than others.</p>
+    <span class="pill red">~250 calls/week recorded</span>
+    <span class="pill red">~2% ever reviewed</span>
+    <span class="pill red">No written scoring rubric</span>
+    <span class="pill">Recordings already exist</span>
+  </div>
+
+  <h2 class="sect">2 · The scoring rubric I wrote</h2>
+  <table class="grid">
+    <caption>Built from the quality standards I worked under on U.S. telecom accounts · 100 points</caption>
+    <thead>
+      <tr><th>Area</th><th>What a great call does</th><th>Points</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><b>Opening</b></td><td>Greets, gives name, verifies the account before discussing details</td><td>10</td></tr>
+      <tr><td><b>Acknowledge</b></td><td>Repeats the customer's actual problem back in their words, before any script line</td><td>15</td></tr>
+      <tr><td><b>Ownership</b></td><td>Says "I will", not "they will"; no transferring blame to other teams</td><td>15</td></tr>
+      <tr><td><b>Troubleshooting</b></td><td>Checks the obvious causes in order; explains each step in plain words</td><td>20</td></tr>
+      <tr><td><b>Retention</b></td><td>When cancel is mentioned: fixes first, offers a fair option, never argues</td><td>15</td></tr>
+      <tr><td><b>Accuracy</b></td><td>Correct policy, correct credit amount, no promises the company can't keep</td><td>15</td></tr>
+      <tr><td><b>Close</b></td><td>Clear next step with a time, confirms the customer is satisfied, notes the account</td><td>10</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sect">3 · Three calls, scored</h2>
+  <table class="grid">
+    <caption>Sample calls with made-up customers · transcripts by Whisper, first-pass scoring by Claude, every score checked by me</caption>
+    <thead>
+      <tr><th>Call</th><th>Agent</th><th>Score</th><th>Strongest</th><th>Biggest gap</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><b>#A-112</b> Slow internet, 3rd call this week</td><td>Agent 1</td><td><b>91</b></td><td>Acknowledged the repeat calls first; took ownership</td><td>Didn't confirm the tech visit time in the close</td></tr>
+      <tr><td><b>#A-118</b> Double charge, wants to cancel</td><td>Agent 2</td><td><b>64</b></td><td>Correct refund amount</td><td>Read the retention script before fixing the charge; customer escalated</td></tr>
+      <tr><td><b>#A-121</b> Router setup for elderly customer</td><td>Agent 3</td><td><b>82</b></td><td>Patient, plain-language steps</td><td>Skipped account verification at the start</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sect">4 · Coaching notes each agent gets</h2>
+
+  <div class="email draft">
+    <div class="hdr">
+      <span class="who">COACHING — Agent 2 (call #A-118)</span>
+      <span class="stamp">Score 64 · Focus: retention order</span>
+    </div>
+    <div class="body">
+      <p><b>What went well:</b> You found the duplicate charge quickly and quoted the right refund amount.</p>
+      <p><b>One thing to change:</b> When the customer said "I'm cancelling," you went straight to the retention offer. She didn't feel heard yet, so the offer sounded like a sales pitch. Next time, fix the charge first ("I can see the double charge, and I'm reversing it right now"), then ask if there's anything else making her want to leave.</p>
+      <p><b>Try this line:</b> "Let me fix this first. If you still want to cancel after, I'll make that easy too."</p>
+      <div class="sig">Delivered in the weekly 1:1 · Re-checked on next week's calls</div>
+    </div>
+  </div>
+
+  <div class="email sent">
+    <div class="hdr">
+      <span class="who">SUMMARY — to team lead</span>
+      <span class="stamp">Week 1 · 3 calls reviewed (pilot)</span>
+    </div>
+    <div class="body">
+      <p>Team average 79/100. The pattern to fix first: <b>retention offers come before the problem is solved</b>, and that's where the lowest scores are. Verification is the second gap (one call skipped it, a security risk).</p>
+      <p>Recommended next step: score 20 calls a week (4 per agent) with the same rubric so the trend is real, not a guess from three calls.</p>
+      <div class="sig">Dashboard: one sheet, one row per call, weekly average per agent and per rubric area</div>
+    </div>
+  </div>
+
+  <h2 class="sect">5 · How it runs every week</h2>
+  <div class="panel">
+    <ul class="checks">
+      <li><b>Mon</b> — Pull 20 recordings (4 per agent, picked at random plus any escalations)</li>
+      <li><b>Mon</b> — Transcribe with Whisper; Claude does a first-pass score against the rubric</li>
+      <li><b>Tue</b> — I listen to the flagged parts and correct every score the AI got wrong</li>
+      <li><b>Wed</b> — Coaching note per agent: one win, one change, one line to try</li>
+      <li class="todo"><b>Fri</b> — Team-lead summary: averages, the pattern to fix, calls worth sharing as examples</li>
+    </ul>
+  </div>
+
+  <div class="result">
+    <span class="rk">What the team gets</span>
+    <p>Coverage goes from about 5 calls a week to 20, every agent gets specific coaching instead of general feedback, and the lead can see which habit is costing saves. This is a sample built on a realistic scenario, so the numbers above are illustrative, not results from a real client.</p>
+  </div>
+
+  <div class="docfoot">
+    <span>SAMPLE WORK PRODUCT · Prepared by Jade Xyrus Abejero · 2026</span>
+    <span>Rubric based on QA standards I worked under as a CSR, SME and mentor. Customer details are made up.</span>
+  </div>
+
+</main>
+
+</body>
+</html>
