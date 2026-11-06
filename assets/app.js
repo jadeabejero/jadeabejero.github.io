@@ -10,7 +10,7 @@
     const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
     reveals.forEach((el) => io.observe(el));
     // Rail: mark the section in view
-    const links = $$('.rail nav a');
+    const links = $$('.top nav a');
     const secIO = new IntersectionObserver((es) => es.forEach((e) => {
       if (!e.isIntersecting) return;
       links.forEach((a) => a.setAttribute('aria-current', a.getAttribute('href') === '#' + e.target.id ? 'true' : 'false'));
@@ -22,6 +22,7 @@
   const viewer = $('#viewer');
   if (viewer && viewer.showModal) {
     const img = document.createElement('img');
+    img.alt = '';
     viewer.prepend(img);
     $$('[data-view]').forEach((b) => b.addEventListener('click', () => {
       img.src = b.dataset.view; img.alt = b.querySelector('img') ? b.querySelector('img').alt : '';
