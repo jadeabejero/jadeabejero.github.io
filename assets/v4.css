@@ -636,3 +636,10 @@ dialog.view{background:var(--card)}
   .top .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:1rem}
   .top.pill .top-in::before{inset:0 1%}
 }
+
+/* Header name: not plain white. A slow orange light sweeps through it; on hover the sweep speeds up. */
+.top .name{background:linear-gradient(100deg,var(--ink) 0 38%,#FFB08C 45%,var(--acc) 50%,var(--ink) 62% 100%);background-size:280% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:nameSweep 5.5s cubic-bezier(.45,0,.2,1) infinite}
+.top .name:hover{animation-duration:1.6s}
+@keyframes nameSweep{0%{background-position:100% 0}55%,100%{background-position:0 0}}
+@media (prefers-reduced-motion:reduce){.top .name{animation:none;background:none;color:var(--ink)}}

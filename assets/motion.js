@@ -133,7 +133,8 @@ function laptop() {
   const N = items.length, LEN = 6 * N;
   // rail: gentle S-curve heading away from the viewer
   const pts = [];
-  for (let i = 0; i <= N + 1; i++) pts.push(new THREE.Vector3(Math.sin(i * 0.9) * 1.6, Math.sin(i * 0.55) * 0.3, -i * 4.2));  // compact: 4.2 units between stops
+  const AMP = canvas.clientWidth < 640 ? 0.45 : 1.6; // flatter route on phones so cards stay on screen
+  for (let i = 0; i <= N + 1; i++) pts.push(new THREE.Vector3(Math.sin(i * 0.9) * AMP, Math.sin(i * 0.55) * 0.3, -i * 4.2));  // compact: 4.2 units between stops
   const rail = new THREE.CatmullRomCurve3(pts);
   // dotted route line just below the rail
   const DOTS = 420, pos = new Float32Array(DOTS * 3);
@@ -171,6 +172,7 @@ function laptop() {
     const t = (i + 1.5) / (N + 2), p = rail.getPointAt(t), tan = rail.getTangentAt(t); // card 01 starts fully in view
     const side = i % 2 ? 1 : -1, norm = new THREE.Vector3(-tan.z, 0, tan.x).normalize();
     m.position.copy(p).addScaledVector(norm, side * 2.25); m.position.y += 0.2;
+    m.userData = { p: p.clone(), norm: norm.clone(), side, back: new THREE.Vector3(p.x - tan.x * 4, p.y + 0.2, p.z - tan.z * 4), q: m.quaternion.clone() }; // phone layout in size()
     m.lookAt(p.x - tan.x * 4, p.y + 0.2, p.z - tan.z * 4); m.rotateY(side * 0.5);
     scene.add(m); return m;
   });
@@ -191,7 +193,16 @@ function laptop() {
   endCard.position.set(ep.x, ep.y - 0.35, ep.z);
   endCard.lookAt(camEnd.x, ep.y - 0.35, camEnd.z);
   scene.add(endCard); cards.push(endCard);
-  const size = () => { const w = canvas.clientWidth, h = canvas.clientHeight; r.setSize(w, h, false); cam.aspect = w / h; cam.fov = w / h < 0.8 ? 82 : w / h < 1.3 ? 68 : 55; cam.updateProjectionMatrix(); cards.forEach((m) => m.scale.setScalar(w < 640 ? 0.6 : w / h < 1.3 ? 0.78 : 1)); };
+  const size = () => { const w = canvas.clientWidth, h = canvas.clientHeight; r.setSize(w, h, false); cam.aspect = w / h; cam.fov = w / h < 0.8 ? 74 : w / h < 1.3 ? 68 : 55; cam.updateProjectionMatrix();
+    // phones: cards sit closer to the route and stay large enough to read; tablets/desktop unchanged
+    const phone = w < 640;
+    cards.forEach((m) => {
+      m.scale.setScalar(phone ? 0.72 : w / h < 1.3 ? 0.78 : 1);
+      const u = m.userData; if (!u || !u.p) return;
+      if (phone) { m.position.copy(u.p).addScaledVector(u.norm, u.side * 0.3); m.position.y += 0.45; m.lookAt(u.back.x, u.back.y + 0.25, u.back.z); }
+      else { m.position.copy(u.p).addScaledVector(u.norm, u.side * 2.25); m.position.y += 0.2; m.quaternion.copy(u.q); }
+    });
+  };
   size(); addEventListener('resize', size);
   let shown = true, cur = 0;
   const look = new THREE.Vector3();
@@ -203,7 +214,7 @@ function laptop() {
     cam.position.copy(rail.getPointAt(t));
     look.copy(rail.getPointAt(Math.min(1, t + 0.03)));
     cam.lookAt(look);
-    cards.forEach((m) => { const d = m.position.distanceTo(cam.position); m.material.opacity = Math.min(1, Math.max(0, (15 - d) / 4)) * Math.min(1, Math.max(0, (d - 3.6) / 1.2)); }); // fade in from far, out when passing
+    cards.forEach((m) => { const d = m.position.distanceTo(cam.position); /* phones: one card at a time */ const far = canvas.clientWidth < 640 ? 8.5 : 15; m.material.opacity = Math.min(1, Math.max(0, (far - d) / 3)) * Math.min(1, Math.max(0, (d - 3.6) / 1.2)); }); // fade in from far, out when passing
     r.render(scene, cam);
     if (shown) requestAnimationFrame(frame);
   };
@@ -355,7 +366,7 @@ function proofDepth() {
   const size = () => {
     const w = canvas.clientWidth, h = canvas.clientHeight; r.setSize(w, h, false); cam.aspect = w / h;
     cam.fov = w / h < 0.8 ? 72 : 50; cam.updateProjectionMatrix();
-    const narrow = w < 720; cards.forEach((c) => { c.grp.scale.setScalar(narrow ? 0.7 : 1); if (!c.last) c.grp.position.x = c.side * (narrow ? 0.5 : 1.25); });
+    const narrow = w < 720; cards.forEach((c) => { if (c.y0 === undefined) c.y0 = c.grp.position.y; c.grp.scale.setScalar(narrow ? 0.8 : 1); c.grp.position.y = c.y0 + (narrow ? 0.42 : 0); if (!c.last) c.grp.position.x = c.side * (narrow ? 0.12 : 1.25); }); // phones: large cards, centred, lifted above the caption
   };
   size(); addEventListener('resize', size);
   let shown = true, cur = 0, active = -1, prev = performance.now();
@@ -368,7 +379,7 @@ function proofDepth() {
     const z = z0 + (z1 - z0) * cur;
     cam.position.set(Math.sin(cur * 6.3) * 0.22, Math.cos(cur * 5.1) * 0.1, z);
     look.set(cam.position.x * 0.3, 0, z - 5); cam.lookAt(look);
-    cards.forEach((c) => { const d = c.grp.position.z - z; const o = d > -0.6 ? 0 : Math.min(1, (-d - 0.6) / 1.2); c.m.material.opacity = o; c.sh.material.opacity = o; });
+    cards.forEach((c) => { const d = c.grp.position.z - z; /* fade out well before a card reaches the camera */ const o = d > -1.5 ? 0 : Math.min(1, (-d - 1.5) / 1.1); c.m.material.opacity = o; c.sh.material.opacity = o; });
     const idx = Math.min(N - 1, Math.max(0, Math.round(cur * (N - 1))));
     if (idx !== active) { active = idx; lis.forEach((li, k) => li.classList.toggle('on', k === idx)); if (num) num.textContent = String(idx + 1).padStart(2, '0'); }
     r.render(scene, cam);
