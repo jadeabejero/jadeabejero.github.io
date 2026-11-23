@@ -27,12 +27,11 @@
   }
   const revealHero = () => h1 && h1.classList.add('in');
 
-  /* JXA intro: once per browser session, ~3.4s, then the screen splits open (timing lives in v4.css) */
+  /* JXA intro: every page load, ~3.4s, then the screen splits open (timing lives in v4.css) */
   const pre = $('.pre');
-  let seen = false; try { seen = sessionStorage.getItem('jxa-intro') === '1'; } catch (e) {}
-  if (!pre || reduce || seen || /[?&]shot(&|$)/.test(location.search)) { root.classList.add('no-pre'); revealHero(); }
+  // plays on every load / refresh (skipped only with reduced motion or ?shot for screenshots)
+  if (!pre || reduce || /[?&]shot(&|$)/.test(location.search)) { root.classList.add('no-pre'); revealHero(); }
   else {
-    try { sessionStorage.setItem('jxa-intro', '1'); } catch (e) {}
     const open = () => { if (pre.classList.contains('done')) return; pre.classList.add('done'); setTimeout(revealHero, 250); setTimeout(() => root.classList.add('no-pre'), 900); };
     const t0 = performance.now();
     const go = () => setTimeout(open, Math.max(0, 3100 - (performance.now() - t0)));
