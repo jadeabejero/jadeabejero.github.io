@@ -64,7 +64,7 @@ if (fine && !reduce) {
 /* 3. Live knowledge graph (2D canvas), drawn in once when it scrolls into view */
 (() => {
   const c = $('.graph-canvas'); if (!c) return;
-  const COLORS = ['rgba(180,192,214,.55)', '#7FB3D5', '#E8B04B', '#7CC6A4', '#E58F7B', '#B9A3E3', '#F2E6C9'];
+  const COLORS = ['rgba(242,240,234,.55)', '#FF5A1F', '#FF8A5C', '#F2F0EA', '#C9C5BB', '#FFB08C', '#9C988E']; // site palette
   let data = null;
   const render = (upto) => {
     const s = c.clientWidth, dpr = Math.min(devicePixelRatio || 1, 2);
@@ -89,8 +89,14 @@ if (fine && !reduce) {
     const tick = (t) => { const p = Math.min(1, (t - t0) / D); render(1 - Math.pow(1 - p, 3)); if (p < 1) requestAnimationFrame(tick); };
     requestAnimationFrame(tick);
   };
-  new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { o.disconnect(); start(); } }, { rootMargin: '200px' }).observe(c);
-  addEventListener('resize', () => data && render(1));
+  // the canvas lives inside the closed "My second brain" <details>, so start it when the panel opens
+  // (and redraw when it re-opens or the window resizes; a closed panel has 0 width)
+  let started = false;
+  const go = () => { if (c.clientWidth < 10) return; if (!started) { started = true; start(); } else if (data) render(1); };
+  const box = c.closest('details');
+  if (box) box.addEventListener('toggle', () => { if (box.open) requestAnimationFrame(go); });
+  new IntersectionObserver((es) => { if (es[0].isIntersecting) go(); }, { rootMargin: '200px' }).observe(c);
+  addEventListener('resize', () => data && c.clientWidth > 10 && render(1));
 })();
 
 /* 4 + 5. Three.js scenes (laptop dolly, card ring). Fall back to plain layouts on failure or reduced motion. */
@@ -362,11 +368,11 @@ function proofDepth() {
   const ball = new THREE.MeshStandardMaterial({ color: 0xff5a1f, roughness: 0.22, metalness: 0.15 });
   [[-2.1, .7, -1.6, .12], [1.9, -.8, -4.6, .09], [-1.5, -1, -7.4, .07], [2.3, .9, -9.2, .13], [-2.4, .2, -11.6, .08], [1.2, 1.2, -12.8, .05], [.6, -1.3, -2.8, .05]]
     .forEach(([px, py, pz, rad]) => { const s = new THREE.Mesh(new THREE.SphereGeometry(rad, 32, 16), ball); s.position.set(px, py, pz); scene.add(s); });
-  const z0 = 4.2, z1 = -(N - 1) * GAP + 3.2;
+  const z0 = 4.2; let z1 = -(N - 1) * GAP + 3.2;
   const size = () => {
     const w = canvas.clientWidth, h = canvas.clientHeight; r.setSize(w, h, false); cam.aspect = w / h;
     cam.fov = w / h < 0.8 ? 72 : 50; cam.updateProjectionMatrix();
-    const narrow = w < 720; cards.forEach((c) => { if (c.y0 === undefined) c.y0 = c.grp.position.y; c.grp.scale.setScalar(narrow ? 0.8 : 1); c.grp.position.y = c.y0 + (narrow ? 0.42 : 0); if (!c.last) c.grp.position.x = c.side * (narrow ? 0.12 : 1.25); }); // phones: large cards, centred, lifted above the caption
+    const narrow = w < 720; z1 = -(N - 1) * GAP + (narrow ? 2.6 : 3.2); /* phones end closer to the last card */ cards.forEach((c) => { if (c.y0 === undefined) c.y0 = c.grp.position.y; c.grp.scale.setScalar(narrow ? 0.8 : 1); c.grp.position.y = c.y0 + (narrow ? 0.36 : 0); if (!c.last) c.grp.position.x = c.side * (narrow ? 0.12 : 1.25); }); // phones: large cards, centred, lifted above the caption
   };
   size(); addEventListener('resize', size);
   let shown = true, cur = 0, active = -1, prev = performance.now();

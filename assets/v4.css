@@ -643,3 +643,41 @@ dialog.view{background:var(--card)}
 .top .name:hover{animation-duration:1.6s}
 @keyframes nameSweep{0%{background-position:100% 0}55%,100%{background-position:0 0}}
 @media (prefers-reduced-motion:reduce){.top .name{animation:none;background:none;color:var(--ink)}}
+
+/* Proof captions on phones: 3 lines max so the 3D card above stays visible */
+@media (max-width:720px){
+  .proof3d:not(.pf-static) .proofs{min-height:0}
+  .proof3d:not(.pf-static) .proofs li p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .proof3d:not(.pf-static) .proofs li{padding:16px 18px}
+}
+@media (max-width:720px){.proof3d:not(.pf-static) .sec-head p{display:none}}
+
+/* Sample work "road bumps": scrolling gently stops on each step (proximity snap, so it never traps the reader) */
+html{scroll-snap-type:y proximity}
+.stp{scroll-snap-align:center}
+@media (max-width:860px){.stp{scroll-snap-align:end;scroll-margin-bottom:4vh}}
+@media (prefers-reduced-motion:reduce){html{scroll-snap-type:none}}
+
+/* HERO v13: black-and-white editorial portrait (xyrus-bw.webp, white background removed), wider crop */
+@media (min-width:1101px){.hero .portrait{aspect-ratio:1400/1233;height:min(74svh,700px);width:auto}}
+@media (min-width:861px) and (max-width:1100px){.hero .portrait{aspect-ratio:1400/1233;width:min(70vw,560px)}}
+@media (max-width:860px){.hero .portrait{aspect-ratio:1400/1233}}
+.hero .portrait::before{left:6%;top:-10%;width:88%}
+.hero .portrait::after{left:12%;top:-6%;width:76%}
+.buddy{left:69%;top:15%}
+
+/* Try my tools on phones: tabs become a 2-column grid of compact chips (no sideways scroll, nothing cut off),
+   the 3 steps shrink to one compact row, tighter panel padding. */
+@media (max-width:760px){
+  .tools .tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;overflow:visible;padding:12px;border-bottom:1px solid var(--line)}
+  .tools .tabs>*{max-width:none;padding:10px 12px;border:1px solid var(--line-2);border-radius:12px;background:transparent}
+  .tools .tabs small{display:none}
+  .tools .tabs b{font-size:.88rem;line-height:1.2}
+  .tools .tabs [aria-selected="true"]{border-color:var(--acc);background:rgba(255,90,31,.1)}
+  .tools .tabs a{grid-column:1/-1;text-align:center}
+  .tools .tabs a b{justify-content:center}
+  .tools .panel{padding:18px 16px}
+  .steps-guide{display:flex!important;gap:6px;flex-wrap:nowrap;overflow:hidden}
+  .steps-guide li{flex:1;min-width:0;padding:8px 8px!important;font-size:.72rem!important;line-height:1.25}
+  .smart{padding:12px 14px}
+}
