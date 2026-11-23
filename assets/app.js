@@ -200,7 +200,7 @@
     const blocks = []; let worked = 0, sinceBreak = 0, lunch = false;
     tasks.forEach((k) => {
       blocks.push({ name: k.name, mins: k.mins, urgent: k.urgent, s: t }); t += k.mins * 60000; worked += k.mins; sinceBreak += k.mins;
-      if (!lunch && worked >= 240) { blocks.push({ name: 'Lunch break', mins: 30, brk: true, s: t }); t += 30 * 60000; lunch = true; sinceBreak = 0; }
+      if (!lunch && worked >= 180) { blocks.push({ name: 'Lunch break', mins: 30, brk: true, s: t }); t += 30 * 60000; lunch = true; sinceBreak = 0; }
       else if (sinceBreak >= 120) { blocks.push({ name: 'Short break', mins: 15, brk: true, s: t }); t += 15 * 60000; sinceBreak = 0; }
     });
     if (blocks.length && blocks[blocks.length - 1].brk) { t -= blocks.pop().mins * 60000; }
@@ -218,7 +218,7 @@
       <ul>
         <li>${Math.round(worked / 6) / 10} hours of work, done by ${fmt(endMs, tz)} ${esc(zoneName)} time.</li>
         <li>In Manila that's ${fmt(startMs, 'Asia/Manila')} to ${fmt(endMs, 'Asia/Manila')}${night ? ', a night shift' : ''}.</li>
-        <li>Urgent tasks go first. A short break comes after every 2 hours, and lunch after 4.</li>
+        <li>Urgent tasks go first. A short break comes after every 2 hours, and lunch after about 3 hours.</li>
         ${guessed ? `<li>${guessed} task${guessed > 1 ? 's had' : ' had'} no duration, so I assumed 30 minutes.</li>` : ''}
       </ul>`;
     out.appendChild(copyButton(() => text));
@@ -238,9 +238,6 @@
     { code: 'TM-03', file: 'travel-management', title: 'Travel Package: Cebu Client Trip', skill: 'Travel management',
       lede: 'Flights, hotel, ground transport and a minute-by-minute itinerary for a 3-day client visit, with price options, contingency plans and a backup for every moving part.',
       steps: ['Options presented: the founder picks, I book', 'Day-by-day itinerary', 'Booked and confirmed checklist'] },
-    { code: 'RM-04', file: 'research-management', title: 'Research Brief: Co-working Space Shortlist', skill: 'Research',
-      lede: 'An open question turned into a decision-ready shortlist: 12 providers scanned, 6 evaluated in depth, one clear recommendation with the math shown.',
-      steps: ['The question, sharpened', 'Comparison matrix', 'Recommendation', 'Verification trail'] },
     { code: 'HM-05', file: 'household-management', title: 'Household Bills & Services Tracker', skill: 'Household management',
       lede: 'A private-client system for running a household the way an office is run: every bill on a schedule, every provider on file, every renewal caught before it lapses.',
       steps: ['Monthly bills schedule', 'The three rules that keep this safe', 'Provider directory', 'Renewal and maintenance radar'] },

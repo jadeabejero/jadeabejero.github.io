@@ -1,0 +1,638 @@
+/* v4: black and strong. Loads after site.css: remaps its tokens, then adds the motion-library pieces. */
+:root{
+  --paper:#0B0B0B; --card:#141414; --sunk:#101010;
+  --ink:#F2F0EA; --text:#D6D3CA; --muted:#9C988E; --line:#242424; --line-2:#383838;
+  --acc:#FF5A1F; --acc-2:#FF7A45; --on-acc:#0B0B0B;
+  --ok:#FF5A1F; --ok-bg:rgba(255,90,31,.12); --warn:#F2B84B; --warn-bg:rgba(242,184,75,.12);
+  --serif:"Archivo",system-ui,sans-serif;
+  --shadow:0 1px 0 rgba(255,255,255,.04),0 18px 40px -24px rgba(0,0,0,.9);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  color-scheme:dark;
+}
+body{background:var(--paper)}
+::selection{background:var(--acc);color:var(--on-acc)}
+:focus-visible{outline-color:var(--acc)}
+h1,h2{font-family:"Archivo",system-ui,sans-serif;font-weight:800;font-stretch:78%;letter-spacing:-.02em;text-transform:uppercase;line-height:.95}
+h2{font-size:clamp(2.4rem,1.6rem + 3.4vw,4.6rem)}
+h3{font-family:"Archivo",system-ui,sans-serif}
+a{color:var(--ink)}
+
+/* Buttons: solid accent, magnetic + text roll (buttons-magnetic, buttons-text-roll) */
+.btn{border-radius:999px;font-weight:600}
+.btn.solid{background:var(--acc);color:var(--on-acc);box-shadow:none}
+.btn.solid:hover{background:var(--acc-2);transform:none}
+.btn.line{color:var(--ink);border-color:var(--line-2)}
+.btn.line:hover{border-color:var(--ink);background:transparent}
+.btn.mag{will-change:transform}
+.roll .rw{display:block;height:1.2em;overflow:hidden;line-height:1.2em}
+.roll .rw span{display:block;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.roll:hover .rw span,.roll:focus-visible .rw span{transform:translateY(-100%)}
+.btn.copy{background:var(--card);color:var(--ink);border-color:var(--line-2)}
+
+/* Preloader (loaders-percent) */
+/* JXA intro (~3.4s, first visit per session): letters stroke-draw, fill (X in accent), a rule and the
+   name track in, then the screen splits open top and bottom. Timeline is all CSS; v4.js only adds .done / .no-pre. */
+.pre{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;pointer-events:none}
+.pre-half{position:absolute;left:0;right:0;height:50.5%;background:var(--paper);transition:transform .8s cubic-bezier(.77,0,.18,1)}
+.pre-half.ph-t{top:0}.pre-half.ph-b{bottom:0}
+.pre.done .pre-half.ph-t{transform:translateY(-100%)}.pre.done .pre-half.ph-b{transform:translateY(100%)}
+.pre-in{position:relative;display:grid;justify-items:center;gap:14px;transition:opacity .35s,transform .8s cubic-bezier(.77,0,.18,1)}
+.pre.done .pre-in{opacity:0;transform:scale(.92)}
+.pre-mark{width:min(560px,78vw);height:auto;overflow:visible}
+.pre-mark text{font:900 200px/1 "Archivo",sans-serif;font-stretch:75%;letter-spacing:-4px}
+.pre-mark text{fill:transparent;stroke:var(--ink);stroke-width:1.6;stroke-dasharray:900;stroke-dashoffset:900;animation:jxdraw 1.25s cubic-bezier(.65,0,.35,1) forwards,jxfill .55s ease forwards}
+.pre-mark .pj{animation-delay:.1s,1.25s}.pre-mark .px{stroke:var(--acc);animation-name:jxdraw,jxfillx;animation-delay:.3s,1.4s}.pre-mark .pa{animation-delay:.5s,1.55s}
+@keyframes jxdraw{to{stroke-dashoffset:0}}
+@keyframes jxfill{to{fill:var(--ink);stroke-width:0}}
+@keyframes jxfillx{to{fill:var(--acc);stroke-width:0}}
+.pre-rule{display:block;width:min(360px,60vw);height:2px;background:var(--acc);transform:scaleX(0);animation:jxrule .8s cubic-bezier(.16,1,.3,1) 1.7s forwards}
+@keyframes jxrule{to{transform:scaleX(1)}}
+.pre-name,.pre-role{margin:0;text-transform:uppercase;opacity:0;animation:jxtrack 1s cubic-bezier(.16,1,.3,1) forwards}
+.pre-name{font:700 clamp(.8rem,.6rem + .6vw,1.05rem)/1 "Archivo",sans-serif;color:var(--ink);animation-delay:1.95s}
+.pre-role{font:500 .72rem/1 "Public Sans",sans-serif;color:var(--muted);animation-delay:2.15s}
+@keyframes jxtrack{from{opacity:0;letter-spacing:.9em}to{opacity:1;letter-spacing:.32em}}
+.no-pre .pre{display:none}
+
+/* Film grain (backgrounds-grain) */
+.grain{position:fixed;left:-10%;top:-10%;width:120%;height:120%;z-index:9000;pointer-events:none;opacity:.06;animation:grn 1s steps(1) infinite}
+@keyframes grn{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-1%)}80%{transform:translate(3%,1%)}}
+
+/* Nav: shrinks into a floating pill on scroll (nav-shrink-pill) */
+.top{background:transparent;border-bottom:0;backdrop-filter:none;-webkit-backdrop-filter:none;transition:transform .5s var(--spring)}
+.top-in{position:relative;transition:max-width .5s var(--spring),padding .5s var(--spring)}
+.top-in::before{content:"";position:absolute;inset:0;z-index:-1;background:rgba(11,11,11,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);transition:inset .5s var(--spring),border-radius .5s var(--spring),border-color .3s}
+.top.pill{transform:translateY(10px)}
+.top.pill .top-in::before{inset:0 2%;border-radius:999px;border:1px solid var(--line-2)}
+.name{font:800 1.15rem/1 "Archivo",sans-serif;font-stretch:80%;text-transform:uppercase;letter-spacing:.01em}
+.top nav a{color:var(--muted)}
+.top nav a:hover,.top nav a[aria-current="true"]{color:var(--ink);border-color:var(--acc)}
+
+/* Hero: split chars + word flip + floating chips */
+.hero{background:var(--paper);padding-bottom:clamp(40px,6vw,72px)}
+.avail{color:var(--acc);background:var(--ok-bg)}
+.hero h1{font-size:clamp(2.6rem,1rem + 4.6vw,5.6rem);max-width:none;line-height:.92}
+@media (min-width:861px){.hero-in{grid-template-columns:minmax(0,1.45fr) minmax(0,.75fr)}}
+.split-h .w{display:block;overflow:hidden;padding-bottom:.04em;white-space:nowrap}
+.split-h .wd{display:inline-block;white-space:nowrap}
+@media (max-width:420px){.hero h1{font-size:2.6rem}}
+.split-h .w:nth-child(2){color:var(--acc)}
+.split-h .c{display:inline-block;transform:translateY(110%);transition:transform .9s cubic-bezier(.16,1,.3,1);transition-delay:calc(var(--i) * 28ms)}
+.split-h.in .c,.no-motion .split-h .c{transform:none}
+.flip{margin-top:22px;font:700 clamp(1.3rem,1rem + 1.2vw,2rem)/1.2 "Archivo",sans-serif;font-stretch:90%;color:var(--ink);display:flex;gap:.35em;flex-wrap:wrap}
+.flip .f{display:inline-grid;perspective:520px;color:var(--acc)}
+.flip .f b{grid-area:1/1;backface-visibility:hidden;animation:fl 8s cubic-bezier(.16,1,.3,1) infinite both;animation-delay:calc(var(--i) * 2s)}
+@keyframes fl{0%{opacity:0;transform:rotateX(-90deg) translateY(.2em)}5%{opacity:1;transform:none}22%{opacity:1;transform:none}27%,100%{opacity:0;transform:rotateX(90deg) translateY(-.2em)}}
+.lede{color:var(--text)}
+.lede strong{color:var(--ink)}
+/* Full studio portrait (Flow scene-01). The photo black (~#070506) differs from the page, so every edge is
+   feathered with a mask: no visible box. */
+.portrait{max-width:440px}
+.portrait::before,.portrait::after{content:none}
+.portrait img{display:block;height:auto;filter:none;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 16%,#000 68%,transparent 100%),linear-gradient(to right,transparent 0,#000 22%,#000 78%,transparent 100%);
+  -webkit-mask-composite:source-in;
+          mask-image:linear-gradient(to bottom,transparent 0,#000 16%,#000 68%,transparent 100%),linear-gradient(to right,transparent 0,#000 22%,#000 78%,transparent 100%);
+          mask-composite:intersect}
+.chips{list-style:none;margin:0;padding:0}
+.chips li{position:absolute;z-index:3;display:flex;gap:6px;align-items:baseline;padding:10px 14px;border-radius:14px;background:rgba(20,20,20,.92);border:1px solid var(--line-2);color:var(--muted);font-size:.84rem;white-space:nowrap;box-shadow:0 16px 30px -18px rgba(0,0,0,.9);animation:bob 5s ease-in-out infinite;animation-delay:calc(var(--i) * -1.6s)}
+.chips b{color:var(--ink);font:700 .95rem/1 "Archivo",sans-serif}
+.chips li:nth-child(1){left:-6%;top:30%}
+.chips li:nth-child(2){right:-4%;top:52%}
+.chips li:nth-child(3){left:2%;bottom:10%}
+@keyframes bob{50%{transform:translateY(-10px)}}
+
+/* Capability line: one row. Words near the cursor brighten and lift, the nearest gets an accent rule,
+   and a faint glow follows the pointer (v4.js sets --p per word, --gx on the section). */
+.capline{position:relative;border-block:1px solid var(--line);overflow:hidden;
+  background:radial-gradient(260px 120px at var(--gx,-400px) 50%,rgba(255,90,31,.10),transparent 70%)}
+.capline ul{list-style:none;margin:0 auto;padding-block:30px;display:flex;justify-content:space-between;align-items:center;gap:18px}
+.capline li{--p:0;position:relative;font:600 clamp(.72rem,.55rem + .45vw,.9rem)/1 "Public Sans",sans-serif;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap;
+  color:color-mix(in srgb,var(--ink) calc(var(--p)*100%),var(--muted));transform:translateY(calc(var(--p)*-3px));transition:color .25s,transform .35s cubic-bezier(.16,1,.3,1);cursor:default}
+.capline li::after{content:"";position:absolute;left:0;right:.2em;bottom:-10px;height:1px;background:var(--acc);transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.16,1,.3,1)}
+.capline li.near::after{transform:scaleX(1)}
+.capline li+li::before{content:none}
+@media (max-width:900px){.capline ul{flex-wrap:wrap;justify-content:center;gap:16px 26px}}
+@media (prefers-reduced-motion:reduce){.capline li{transform:none}}
+
+/* Stats (stats-count-up) */
+main section.stats{padding-block:clamp(48px,6vw,80px)}
+.stats-in{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.stats-in>div{padding:8px 24px;border-left:1px solid var(--line)}
+.stats-in>div:first-child{border-left:0;padding-left:0}
+.stats-in b{display:block;font:800 clamp(3rem,2rem + 3vw,5rem)/1 "Archivo",sans-serif;font-stretch:75%;color:var(--ink);font-variant-numeric:tabular-nums}
+.stats-in span{display:block;margin-top:8px;color:var(--muted);font-size:.95rem}
+@media (max-width:760px){.stats-in{grid-template-columns:1fr 1fr;row-gap:28px}.stats-in>div:nth-child(3){border-left:0;padding-left:0}}
+
+/* Cards and panels on dark */
+.proofs,.tools,.cases,.skills>div,.out,.build-detail,.svc-cards li{background:var(--card);border-color:var(--line)}
+.proofs li{border-color:var(--line)}
+.tabs,.case-list{background:var(--sunk);border-color:var(--line)}
+.tabs>*:hover,.case-list button:hover{background:#1B1B1B}
+.tabs [aria-selected="true"],.case-list button[aria-selected="true"]{background:var(--card);border-left-color:var(--acc)}
+.steps button{background:var(--sunk);color:var(--ink)}
+.steps button[aria-pressed="true"]{background:var(--acc);color:var(--on-acc);border-color:var(--acc)}
+.reply,.chips span,textarea:focus,select:focus,input:focus{background:#181818}
+textarea,select,input{background:var(--sunk);color:var(--ink);border-color:var(--line-2)}
+.thumb{background:var(--sunk)}
+.thumb span{background:var(--acc);color:var(--on-acc)}
+.peek{background:#fff}
+dialog.view{background:var(--card)}
+.meter i::after{border-right-color:var(--ink)}
+.more summary{background:var(--card)}
+.sample-tag,.proofs h3 small,.label{color:var(--warn);background:var(--warn-bg)}
+
+/* Spotlight border on hover (cards-spotlight-border) */
+.spot{--mx:-500px;--my:-500px;position:relative}
+.spot::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;padding:1px;background:radial-gradient(220px circle at var(--mx) var(--my),var(--acc),transparent 70%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+
+/* Experience: timeline line draws as you scroll (scroll-line-draw) */
+.cv{position:relative;padding-left:26px}
+.cv::before{content:"";position:absolute;left:0;top:6px;bottom:0;width:2px;background:var(--line)}
+.cv::after{content:"";position:absolute;left:0;top:6px;bottom:0;width:2px;background:var(--acc);transform-origin:0 0;transform:scaleY(var(--tl,0))}
+.cv>li{position:relative}
+.cv>li::before{content:"";position:absolute;left:-31px;top:34px;width:12px;height:12px;border-radius:50%;background:var(--paper);border:2px solid var(--acc)}
+.cv>li:first-child::before{top:6px}
+/* Dot pop when the timeline line reaches it: fill, overshoot, glow, shockwave ring, year lights up */
+.cv>li::before{z-index:1;transition:background .2s,box-shadow .4s}
+.cv>li::after{content:"";position:absolute;left:-31px;top:34px;width:12px;height:12px;border-radius:50%;border:2px solid var(--acc);opacity:0;pointer-events:none;box-sizing:border-box}
+.cv>li:first-child::after{top:6px}
+.cv>li.hit::before{background:var(--acc);box-shadow:0 0 0 5px rgba(255,90,31,.18),0 0 26px 4px rgba(255,90,31,.55);animation:dotpop .7s cubic-bezier(.2,1.6,.4,1)}
+.cv>li.hit::after{animation:dotwave .9s cubic-bezier(.16,1,.3,1)}
+.cv>li .when,.cv>li>p:first-child{transition:color .3s}
+.cv>li.hit .when,.cv>li.hit>p:first-child{color:var(--acc)}
+@keyframes dotpop{0%{transform:scale(1)}35%{transform:scale(2.4)}60%{transform:scale(.85)}100%{transform:scale(1)}}
+@keyframes dotwave{0%{transform:scale(1);opacity:.9}100%{transform:scale(6);opacity:0}}
+@media (prefers-reduced-motion:reduce){.cv>li.hit::before,.cv>li.hit::after{animation:none}}
+
+/* About: words light up as you scroll (scroll-text-ink) */
+.about-copy>p.ink{font:600 clamp(1.3rem,1rem + 1.2vw,2rem)/1.35 "Archivo",sans-serif;font-stretch:92%;color:var(--muted)}
+.ink span{transition:color .3s ease}
+.ink span.on{color:var(--ink)}
+.ink span.cur{color:var(--acc)}
+
+/* Services and builds on dark */
+.services{background:var(--paper)}
+.svc-cards h3,.build-detail h3{font-family:"Archivo",sans-serif;font-weight:700}
+.graph-canvas{background:#111}
+.build-detail .kind{color:var(--acc);background:var(--ok-bg)}
+
+/* Contact band and big wordmark footer (footer-wordmark) */
+.close{background:var(--acc);color:var(--on-acc)}
+.close h2{color:var(--on-acc)}
+.close p{color:#1E1A17}
+.btn.inv.solid{background:var(--on-acc);color:var(--ink)}
+.btn.inv.solid:hover{background:#1E1E1E}
+.btn.inv.line{color:var(--on-acc);border-color:rgba(11,11,11,.4)}
+.btn.inv.line:hover{border-color:var(--on-acc);background:rgba(11,11,11,.06)}
+.foot{background:var(--paper);color:var(--muted);border-top:0;padding:28px 0 0;overflow:hidden}
+.foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.wordmark{overflow:hidden;line-height:.8;margin-top:24px}
+.wordmark span{display:block;font:900 27vw/.82 "Archivo",sans-serif;font-stretch:62%;letter-spacing:-.02em;color:var(--ink);text-align:center;transform:translateY(calc((1 - var(--wm,1)) * 100%))}
+
+/* Cursor: accent dot, light ring */
+.cur-dot{background:var(--acc);mix-blend-mode:normal}
+.cur-ring{border-color:rgba(242,240,234,.7);mix-blend-mode:normal}
+
+@media (prefers-reduced-motion:reduce){.grain,.mq,.chips li,.flip .f b{animation:none}.flip .f b:not(:first-child){display:none}.split-h .c{transform:none}}
+@media (max-width:860px){.chips li:nth-child(1){left:0}.chips li:nth-child(2){right:0}}
+
+/* Every CTA: a solid accent gradient blooms from the center on hover (~620ms), text turns white */
+.btn{position:relative;overflow:hidden;isolation:isolate;transition:color 620ms cubic-bezier(.16,1,.3,1),border-color 620ms cubic-bezier(.16,1,.3,1)}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:radial-gradient(circle at 50% 50%,#F05A1E 0%,#C2410C 100%);transform:scale(0);opacity:0;transition:transform 620ms cubic-bezier(.16,1,.3,1),opacity 260ms ease}
+.btn:hover::before,.btn:focus-visible::before{transform:scale(1.08);opacity:1}
+.btn:hover,.btn:focus-visible,.btn.solid:hover,.btn.line:hover{color:#fff;border-color:#C2410C;background-color:transparent}
+.btn.solid:hover{background:var(--acc)}
+.close .btn::before{background:radial-gradient(circle at 50% 50%,#2A2A2A 0%,#0B0B0B 100%)}
+.close .btn:hover,.close .btn:focus-visible{color:#fff;border-color:#0B0B0B}
+.btn svg{position:relative}
+@media (prefers-reduced-motion:reduce){.btn::before{transition:none}}
+
+/* Camera-along-path: taller scroll track; HTML cards stay for screen readers and the no-3D fallback */
+.services{height:420vh}
+.services:not(.static) .svc-cards{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);opacity:1}
+.services.static{height:auto}
+.svc-head h2{color:var(--ink)}
+
+/* Highlight chips sit beside the portrait, never over the face */
+.chips{position:absolute;left:-46%;bottom:8%;z-index:3;display:grid;gap:10px;justify-items:end}
+.chips li,.chips li:nth-child(n){position:static;left:auto;right:auto;top:auto;bottom:auto}
+@media (max-width:860px){
+  .portrait{display:grid;justify-items:center}
+  .chips{position:static;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:14px}
+}
+.chips{left:-12%;bottom:3%;justify-items:start;gap:8px}
+.chips li{padding:8px 12px;font-size:.8rem}
+.top nav a,.btn{white-space:nowrap}
+@media (max-width:1100px){.top nav{gap:14px}.top nav a{font-size:.85rem}}
+
+/* Second brain: optional, opens on demand */
+.brain{margin-top:clamp(48px,6vw,80px);border:1px solid var(--line-2);border-radius:var(--r);background:var(--card)}
+.brain summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 24px}
+.brain summary::-webkit-details-marker{display:none}
+.brain summary b{display:block;font:800 clamp(1.3rem,1rem + 1vw,1.8rem)/1.1 "Archivo",sans-serif;font-stretch:80%;text-transform:uppercase;color:var(--ink)}
+.brain summary small{display:block;margin-top:4px;color:var(--muted);font-size:.92rem}
+.brain summary i{font:400 2rem/1 "Archivo",sans-serif;font-style:normal;color:var(--acc);transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.brain[open] summary i{transform:rotate(45deg)}
+.brain .graph-block{margin:0;padding:0 24px 24px}
+
+/* Friendlier tools */
+.smart{display:grid;gap:12px;margin-bottom:16px;padding:16px 20px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--card)}
+.sw{display:inline-flex;align-items:center;gap:10px;font-weight:600;color:var(--ink);cursor:pointer}
+.sw small{color:var(--muted);font-weight:400}
+.sw input{position:absolute;opacity:0;width:1px;height:1px}
+.sw span{width:42px;height:24px;border-radius:99px;background:var(--line-2);position:relative;transition:background .3s}
+.sw span::after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:var(--ink);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.sw input:checked + span{background:var(--acc)}
+.sw input:checked + span::after{transform:translateX(18px);background:#0B0B0B}
+.sw input:focus-visible + span{outline:2px solid var(--acc);outline-offset:3px}
+.smart-cfg label{font-size:.86rem;color:var(--muted)}
+.smart-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.smart-row input{flex:1 1 260px}
+.smart-row select{flex:0 0 auto;width:auto}
+.steps-guide{list-style:none;counter-reset:g;margin:18px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.steps-guide li{counter-increment:g;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--sunk);color:var(--text);font-size:.9rem;line-height:1.4}
+.steps-guide li::before{content:counter(g);display:inline-grid;place-items:center;width:22px;height:22px;margin-right:8px;border-radius:50%;background:var(--acc);color:#0B0B0B;font-weight:700;font-size:.8rem}
+.examples{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:4px 0 2px}
+.examples>span{font-size:.86rem;color:var(--muted);margin-right:2px}
+.chip{font:600 .86rem/1 var(--sans);color:var(--ink);background:var(--sunk);border:1px solid var(--line-2);border-radius:99px;padding:9px 14px;min-height:36px;cursor:pointer;transition:border-color .2s,background .2s}
+.chip:hover,.chip.on{border-color:var(--acc);background:rgba(255,90,31,.12)}
+.chip.ghost{color:var(--muted)}
+.kbd-hint{font-size:.8rem;color:var(--muted);margin-left:10px;align-self:center}
+.field .btn{justify-self:start}
+.field{grid-template-columns:1fr}
+.out .error{color:#FFB4A0;background:rgba(255,90,31,.12)}
+@media (max-width:640px){.steps-guide{grid-template-columns:1fr}.kbd-hint{display:none}}
+
+/* Sample work: situation, deliverable, preview, real file */
+.samples{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.sample{display:grid;grid-template-rows:auto auto 1fr auto auto;gap:12px;padding:24px;border:1px solid var(--line);border-radius:var(--r);background:var(--card);transition:border-color .3s,transform .4s cubic-bezier(.16,1,.3,1)}
+.sample:hover{border-color:var(--acc);transform:translateY(-3px)}
+.sample-kind{font-size:.8rem;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.08em}
+.sample h3{font:800 1.6rem/1.05 "Archivo",sans-serif;font-stretch:82%;text-transform:uppercase;color:var(--ink)}
+.sample dl{margin:0;display:grid;gap:4px}
+.sample dt{font-size:.8rem;font-weight:600;color:var(--muted);margin-top:8px}
+.sample dd{margin:0;color:var(--text);font-size:.95rem}
+.sample-peek{list-style:none;margin:4px 0 0;padding:12px 14px;border-radius:10px;background:var(--sunk);border:1px dashed var(--line-2);display:grid;gap:6px}
+.sample-peek li{display:flex;justify-content:space-between;gap:12px;font-size:.86rem;color:var(--muted)}
+.sample-peek b{color:var(--ink);font-variant-numeric:tabular-nums}
+.sample-links{display:flex;flex-wrap:wrap;gap:10px}
+.sample dl{align-content:start}
+
+/* End-of-route CTA (real buttons) */
+.svc-end{position:absolute;left:0;right:0;bottom:clamp(24px,6vh,56px);z-index:4;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .5s ease,transform .6s cubic-bezier(.16,1,.3,1)}
+.svc-end.on{opacity:1;transform:none;pointer-events:auto}
+.services.static .svc-end{position:static;opacity:1;transform:none;pointer-events:auto;margin-top:24px}
+/* Ring caption: proper padding and a border */
+.build-detail{padding:22px 28px 26px;border:1px solid var(--line);border-radius:var(--r);max-width:min(64ch,100%);box-sizing:border-box}
+.smart .ai-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--acc);margin-right:6px;box-shadow:0 0 0 0 rgba(255,90,31,.6);animation:aipulse 2s infinite}
+@keyframes aipulse{70%{box-shadow:0 0 0 8px rgba(255,90,31,0)}100%{box-shadow:0 0 0 0 rgba(255,90,31,0)}}
+
+/* Proof: depth-parallax planes (three-scroll-depth-layers). The section pins a canvas; the caption card
+   bottom-left is the real list item for the proof in front of the camera, so its links and View button work.
+   .pf-static (reduced motion / no WebGL) shows the plain list. */
+.proof3d:not(.pf-static){height:360vh;position:relative}
+.proof3d:not(.pf-static) .pf-pin{position:sticky;top:0;height:100vh;overflow:hidden}
+.pf-canvas{display:none}
+.proof3d:not(.pf-static) .pf-canvas{display:block;position:absolute;inset:0;width:100%;height:100%}
+.proof3d:not(.pf-static) .pf-wrap{position:relative;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding-block:clamp(84px,11vh,120px) clamp(28px,5vh,48px);pointer-events:none}
+.proof3d:not(.pf-static) .sec-head{max-width:520px;margin:0}
+.proof3d:not(.pf-static) .proofs{position:relative;max-width:540px;min-height:200px;background:none;border:0;box-shadow:none;opacity:1;transform:none}
+.proof3d:not(.pf-static) .proofs li{position:absolute;left:0;right:0;bottom:0;border:1px solid var(--line);border-radius:var(--r);background:rgba(20,20,20,.82);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  opacity:0;transform:translateY(18px);transition:opacity .4s,transform .6s cubic-bezier(.16,1,.3,1);pointer-events:none}
+.proof3d:not(.pf-static) .proofs li.on{opacity:1;transform:none;pointer-events:auto}
+.proof3d:not(.pf-static) .proofs .thumb img{display:none}
+.proof3d:not(.pf-static) .aside{position:absolute;right:max(16px,4vw);bottom:clamp(28px,5vh,48px);max-width:260px;text-align:right;font-size:.8rem;margin:0}
+.pf-count{display:none}
+.proof3d:not(.pf-static) .pf-count{display:block;position:absolute;right:max(16px,4vw);top:clamp(84px,11vh,120px);margin:0;z-index:1;font:600 .85rem/1 "Public Sans",sans-serif;letter-spacing:.2em;color:var(--muted)}
+.pf-count b{font:800 clamp(2.4rem,1.6rem + 3vw,4.2rem)/1 "Archivo",sans-serif;color:var(--ink);letter-spacing:0;margin-right:6px;vertical-align:-.3em}
+@media (max-width:720px){.proof3d:not(.pf-static) .aside{display:none}.proof3d:not(.pf-static) .proofs{min-height:240px}}
+
+/* Sample work: sticky product steps (gsap-scroll-sticky-steps, vanilla). Steps scroll on the left; the
+   deliverable panel on the right stays pinned and swaps per step: bars grow, rows check in, a flag pops,
+   a badge rises. Active step at full opacity, others dimmed. Stacks to one column on small screens. */
+.stp-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);margin-top:28px}
+.stp{min-height:72vh;display:flex;flex-direction:column;justify-content:center;gap:14px;opacity:.28;transition:opacity .5s}
+.stp.on{opacity:1}
+.stp-eye{margin:0;font:600 .78rem/1 "Public Sans",sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.stp-eye b{color:var(--acc);font-weight:700}
+.stp h3{margin:0;font:800 clamp(1.8rem,1.2rem + 2.4vw,3rem)/1 "Archivo",sans-serif;font-stretch:80%;text-transform:uppercase;color:var(--ink)}
+.stp dl{margin:0;display:grid;gap:4px;max-width:52ch}
+.stp dt{font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:10px}
+.stp dd{margin:0;color:var(--text)}
+.stp .sample-links{margin-top:8px}
+.stp-stick{position:relative}
+.stp-visual{position:sticky;top:calc(50vh - 230px);height:460px;border:1px solid var(--line);border-radius:var(--r);background:var(--card);overflow:hidden}
+.stp-visual::before{content:"";position:absolute;right:-140px;top:-140px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,90,31,.18),transparent 65%)}
+.stp-top{position:absolute;left:28px;right:28px;top:22px;display:flex;justify-content:space-between;align-items:center;z-index:2}
+.stp-count{font:600 .8rem/1 "Public Sans",sans-serif;letter-spacing:.16em;color:var(--muted)}
+.stp-count b{font:800 1.6rem/1 "Archivo",sans-serif;color:var(--ink);letter-spacing:0;margin-right:4px}
+.stp-pills{display:flex;gap:6px}
+.stp-pills i{width:18px;height:4px;border-radius:4px;background:var(--line-2);transition:background .3s,width .4s cubic-bezier(.16,1,.3,1)}
+.stp-pills i.on{background:var(--acc);width:34px}
+.vz{position:absolute;inset:70px 28px 28px;display:flex;flex-direction:column;gap:14px;opacity:0;visibility:hidden;transform:translateY(14px);transition:opacity .45s,transform .6s cubic-bezier(.16,1,.3,1),visibility 0s .45s}
+.vz.on{opacity:1;visibility:visible;transform:none;transition:opacity .45s,transform .6s cubic-bezier(.16,1,.3,1),visibility 0s}
+.vz-tag{margin:0;font:600 .72rem/1 "Public Sans",sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--acc)}
+.vz-head{margin:0;font:800 1.6rem/1.05 "Archivo",sans-serif;font-stretch:85%;text-transform:uppercase;color:var(--ink)}
+.vz ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:12px;flex:1;align-content:start}
+.vz.chart li{display:grid;grid-template-columns:1fr auto;gap:6px 12px;font-size:.9rem;color:var(--text)}
+.vz.chart li b{color:var(--ink);font-variant-numeric:tabular-nums}
+.vz.chart li i{grid-column:1/-1;height:8px;border-radius:8px;background:var(--line);position:relative;overflow:hidden}
+.vz.chart li i::after{content:"";position:absolute;inset:0;border-radius:8px;background:var(--line-2);transform-origin:0 50%;transform:scaleX(.08);transition:transform .9s cubic-bezier(.16,1,.3,1) calc(var(--k)*70ms),background .4s}
+.vz.chart.on li i::after{transform:scaleX(var(--v));background:#D6D3CA}
+.vz.chart.on li:last-child i::after{background:var(--acc)}
+.vz.list li{display:flex;align-items:center;gap:12px;font-size:.95rem;color:var(--text);padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.02);opacity:0;transform:translateX(-10px);transition:opacity .4s calc(var(--k)*90ms),transform .5s cubic-bezier(.16,1,.3,1) calc(var(--k)*90ms)}
+.vz.list li::before{content:"";flex:none;width:18px;height:18px;border-radius:5px;background:var(--acc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B0B0B' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/11px no-repeat}
+.vz.list.on li{opacity:1;transform:none}
+.vz-flag{margin:0;align-self:flex-start;font:700 .78rem/1 "Public Sans",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--acc);border:1px solid rgba(255,90,31,.45);background:rgba(255,90,31,.1);padding:7px 12px;border-radius:999px;transform:scale(0);transition:transform .5s cubic-bezier(.34,1.8,.5,1) .35s}
+.vz.on .vz-flag{transform:scale(1)}
+.vz-badge{position:absolute;right:0;bottom:0;margin:0;font:700 .85rem/1 "Public Sans",sans-serif;color:#0B0B0B;background:var(--acc);padding:12px 16px;border-radius:12px;transform:translateY(160%);transition:transform .6s cubic-bezier(.16,1,.3,1) .5s}
+.vz.on .vz-badge{transform:none}
+@media (max-width:860px){
+  .stp-grid{grid-template-columns:1fr}
+  .stp-stick{order:-1;position:sticky;top:104px;z-index:3}
+  .stp-visual{position:relative;top:0;height:250px;box-shadow:0 18px 30px -12px rgba(0,0,0,.8)}
+  .stp-top{top:16px;left:18px;right:18px}
+  .vz{inset:52px 18px 16px;gap:6px}.vz ul{gap:6px;margin:0}.vz-head{font-size:1.1rem}
+  .vz.chart li{font-size:.8rem;gap:3px 10px}.vz.chart li i{height:6px}
+  .vz.list li{padding:5px 10px;font-size:.8rem}
+  .vz-badge,.vz-flag{display:none}
+  .vz.list li:nth-child(n+5){display:none}
+  .stp{min-height:75vh;justify-content:flex-end;padding-bottom:6vh}
+}
+@media (prefers-reduced-motion:reduce){.stp{opacity:1}.vz,.vz *{transition:none!important}}
+
+/* Builds ring: active-dot indicator (replaces arrows) */
+.ring-dots{display:flex;justify-content:center;gap:10px;margin-top:6px}
+.ring-dots button{width:10px;height:10px;padding:0;border:0;border-radius:999px;background:var(--line-2);cursor:pointer;transition:width .45s cubic-bezier(.16,1,.3,1),background .3s}
+.ring-dots button:hover{background:var(--muted)}
+.ring-dots button.on{width:34px;background:var(--acc)}
+.ring-ctrl{display:none}
+
+/* HERO v5: the portrait is a full-height layer on the right that the page grows out of (no frame):
+   left and top edges dissolve into the page, an orange glow matches his rim light, and the copy
+   overlaps it slightly so photo and headline read as one composition. */
+.hero{position:relative;min-height:min(100svh,940px);display:flex;align-items:center;overflow:hidden}
+.hero .hero-in{position:relative;z-index:2;width:100%}
+@media (min-width:861px){.hero .hero-in{grid-template-columns:minmax(0,1fr)}.hero-copy{max-width:760px}.hero .lede{max-width:34em}}
+@media (min-width:861px) and (max-width:1280px){.hero .lede{max-width:28em}}
+.hero .portrait{position:absolute;z-index:1;right:0;bottom:0;margin:0;width:min(52vw,820px);height:100%;max-width:none;pointer-events:none}
+.hero .portrait::before{content:"";position:absolute;left:18%;right:-10%;top:12%;bottom:-10%;background:radial-gradient(closest-side,rgba(255,90,31,.22),rgba(255,90,31,.06) 55%,transparent 75%);filter:blur(10px);z-index:0}
+.hero .portrait img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;object-position:50% 18%;filter:none;
+  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 38%,#000 86%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 18%,#000 86%,transparent 100%);
+  -webkit-mask-composite:source-in;
+          mask-image:linear-gradient(to right,transparent 0,#000 38%,#000 86%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 18%,#000 86%,transparent 100%);
+          mask-composite:intersect;
+  transform:translate3d(calc(var(--px,0)*-10px),calc(var(--py,0)*-6px),0) scale(1.03);transition:transform .8s cubic-bezier(.16,1,.3,1)}
+@media (max-width:860px){
+  .hero{display:block;min-height:0;padding-top:0}
+  .hero .portrait{position:relative;width:100%;height:58vh;max-height:520px;margin-top:-8px}
+  .hero .portrait img{object-position:50% 12%;
+    -webkit-mask-image:linear-gradient(to bottom,#000 55%,transparent 100%),linear-gradient(to right,transparent 0,#000 12%,#000 88%,transparent 100%);
+            mask-image:linear-gradient(to bottom,#000 55%,transparent 100%),linear-gradient(to right,transparent 0,#000 12%,#000 88%,transparent 100%)}
+  .hero .hero-in{margin-top:-90px}
+}
+
+/* Interactive headline: after the reveal, the color inside letters near the cursor shifts (no movement). v4.js sets --h per letter. */
+/* fixed text: letters never move or resize; only the color inside them lights up near the cursor */
+.split-h.live .c{transition:color .25s;transition-delay:0s;transform:none;color:color-mix(in srgb,var(--acc) calc(var(--h,0)*100%),var(--ink))}
+.split-h.live .w:nth-child(2) .c{color:color-mix(in srgb,var(--ink) calc(var(--h,0)*100%),var(--acc))}
+
+/* "I handle your ___": the word decodes letter by letter (scramble), with an accent caret */
+.handle{margin:22px 0 0;font:700 clamp(1.3rem,1rem + 1.3vw,2.1rem)/1.15 "Archivo",sans-serif;font-stretch:88%;color:var(--ink);text-transform:uppercase;letter-spacing:.005em}
+.handle .hw{color:var(--acc);position:relative;display:inline-block;min-width:6ch;white-space:nowrap}
+.handle .hw::after{content:"";display:inline-block;width:.09em;height:.9em;margin-left:.08em;vertical-align:-.08em;background:var(--acc);animation:caret 1s steps(1) infinite}
+.handle .hw i{font-style:normal;color:var(--muted)}
+@keyframes caret{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.handle .hw::after{animation:none}}
+
+/* Letter rise (v4.js: .sp words .spw, letters .spc). Each word clips its letters; letters rise in a
+   stagger, and role titles flash the accent as they land. */
+.sp .spw{display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:.06em;margin-bottom:-.06em;white-space:nowrap}
+.sp .spc{display:inline-block;transform:translateY(105%);transition:transform .8s cubic-bezier(.16,1,.3,1) calc(var(--i)*18ms)}
+.sp.in .spc{transform:none}
+.cv h3.sp .spc{transition:transform .8s cubic-bezier(.16,1,.3,1) calc(var(--i)*16ms),color .6s ease calc(var(--i)*16ms + .5s)}
+
+.cv h3{font:800 clamp(1.3rem,1rem + 1vw,1.8rem)/1.1 "Archivo",sans-serif;font-stretch:84%;text-transform:uppercase;letter-spacing:.005em;color:var(--ink)}
+.cv > li.hit h3{color:var(--ink)}
+
+/* My stack: a 3D field of tool icons drifting toward you (motion.js stackFly), then three columns of chips */
+.stack{margin-top:56px}
+.stack-fly{position:relative;height:clamp(300px,42vw,460px);border:1px solid var(--line);border-radius:var(--r) var(--r) 0 0;overflow:hidden;
+  background:radial-gradient(70% 90% at 50% 120%,rgba(255,90,31,.16),transparent 60%),var(--card)}
+.stack-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.stack-title{position:absolute;left:clamp(20px,3vw,36px);bottom:clamp(18px,3vw,30px);z-index:2;pointer-events:none;max-width:70%}
+.stack-eye{margin:0 0 8px;font:600 .75rem/1 "Public Sans",sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)}
+.stack-title h3{margin:0;font:800 clamp(1.6rem,1rem + 2.4vw,3rem)/1 "Archivo",sans-serif;font-stretch:80%;text-transform:uppercase;color:var(--ink);text-shadow:0 2px 24px rgba(0,0,0,.8)}
+.stack-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);border-top:0;border-radius:0 0 var(--r) var(--r);overflow:hidden}
+.stack-col{padding:26px 26px 28px;background:var(--card);position:relative}
+.stack-col+.stack-col{border-left:1px solid var(--line)}
+.stack-k{margin:0;font:800 .85rem/1 "Archivo",sans-serif;color:var(--acc)}
+.stack-col h3{margin:10px 0 4px;font:800 1.35rem/1.05 "Archivo",sans-serif;font-stretch:84%;text-transform:uppercase;color:var(--ink)}
+.stack-sub{margin:0 0 16px;color:var(--muted);font-size:.9rem}
+.stack-col ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.stack-col li{font-size:.85rem;color:var(--text);border:1px solid var(--line-2);border-radius:999px;padding:6px 12px;transition:border-color .25s,color .25s,background .25s,transform .25s}
+.stack-col li:hover{border-color:var(--acc);color:var(--ink);background:rgba(255,90,31,.08);transform:translateY(-2px)}
+.stack-static .stack-fly{display:none}
+.stack-static .stack-cols{border-top:1px solid var(--line);border-radius:var(--r)}
+@media (max-width:860px){.stack-cols{grid-template-columns:1fr}.stack-col+.stack-col{border-left:0;border-top:1px solid var(--line)}}
+
+/* About v5: a huge outlined "2026" drifts behind; a 3-stop journey line draws as you scroll (stops pop
+   like the timeline); the ink paragraph stays; the setup becomes four spec cards with icons and a
+   cursor spotlight. */
+.about-v5{position:relative;overflow:hidden;padding-block:clamp(80px,10vw,140px)}
+.about-ghost{position:absolute;right:-2vw;top:50%;transform:translateY(calc(-50% + var(--ag,0)*-80px));font:900 clamp(10rem,24vw,26rem)/.8 "Archivo",sans-serif;font-stretch:75%;color:transparent;-webkit-text-stroke:1px rgba(242,240,234,.07);pointer-events:none;user-select:none;letter-spacing:-.04em;z-index:0}
+.about-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(32px,6vw,96px);align-items:start}
+.about-eye,.about-copy>p.setup-eye{margin:0 0 14px;font:600 .75rem/1 "Public Sans",sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)}
+.about-v5 h2{margin:0;font-size:clamp(2.6rem,1.4rem + 4vw,5rem);line-height:.92}
+.journey{list-style:none;margin:40px 0 0;padding:0 0 0 30px;position:relative;display:grid;gap:26px}
+.journey::before{content:"";position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.journey::after{content:"";position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:var(--acc);transform-origin:0 0;transform:scaleY(var(--jp,0))}
+.journey li{position:relative;display:grid;gap:4px}
+.journey li::before{content:"";position:absolute;left:-30px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--paper);border:2px solid var(--line-2);z-index:1;transition:background .3s,border-color .3s,box-shadow .4s}
+.journey li.hit::before{background:var(--acc);border-color:var(--acc);box-shadow:0 0 0 5px rgba(255,90,31,.18),0 0 22px 3px rgba(255,90,31,.5);animation:dotpop .7s cubic-bezier(.2,1.6,.4,1)}
+.journey b{font:800 1.15rem/1.1 "Archivo",sans-serif;font-stretch:86%;text-transform:uppercase;color:var(--ink)}
+.journey span{color:var(--muted);font-size:.92rem}
+.about-v5 .about-copy>p.ink{margin:0 0 40px;font-size:clamp(1.4rem,1rem + 1.4vw,2.2rem);line-height:1.3}
+.specs{margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.spec{position:relative;padding:20px 20px 18px;border:1px solid var(--line);border-radius:var(--r);background:var(--card);overflow:hidden;transition:transform .35s cubic-bezier(.16,1,.3,1),border-color .3s}
+.spec::after{content:"";position:absolute;inset:0;background:radial-gradient(220px circle at var(--mx,-300px) var(--my,-300px),rgba(255,90,31,.14),transparent 60%);pointer-events:none}
+.spec:hover{transform:translateY(-4px);border-color:rgba(255,90,31,.5)}
+.spec svg{width:26px;height:26px;fill:none;stroke:var(--acc);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin-bottom:14px}
+.spec svg circle{fill:var(--acc);stroke:none}
+.spec dt{font-size:.75rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.spec dd{margin:6px 0 0;color:var(--ink);font-weight:600;font-size:1rem;line-height:1.35}
+@media (max-width:860px){.about-grid{grid-template-columns:1fr}.about-ghost{top:12%}}
+@media (max-width:480px){.specs{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.journey::after{transform:none}.journey li::before{animation:none}}
+
+/* HERO v6: background removed from the photo (assets/img/xyrus-cut.webp); the accent is coded behind him:
+   a solid orange disc with a soft inner shade and two thin orbit rings. A pixel avatar sits on his
+   shoulder and its eyes follow the cursor. Overrides the v5 portrait rules above. */
+.hero .portrait{position:absolute;z-index:1;right:max(0px,calc((100vw - 1280px) / 2));bottom:0;width:min(44vw,620px);height:auto;margin:0;pointer-events:none}
+.hero .portrait img{position:relative;z-index:2;display:block;width:100%;height:auto;object-fit:initial;transform:none;filter:drop-shadow(0 30px 40px rgba(0,0,0,.55));
+  -webkit-mask-image:linear-gradient(to bottom,#000 82%,transparent 100%);mask-image:linear-gradient(to bottom,#000 82%,transparent 100%);-webkit-mask-composite:source-over;mask-composite:add}
+.hero .portrait::before{content:"";position:absolute;z-index:0;left:8%;top:6%;width:84%;aspect-ratio:1;border-radius:50%;filter:none;
+  background:radial-gradient(circle at 35% 30%,#FF7A45 0%,#FF5A1F 42%,#C2410C 100%);
+  box-shadow:0 0 120px 10px rgba(255,90,31,.28);transform:translate3d(calc(var(--px,0)*8px),calc(var(--py,0)*6px),0);transition:transform .9s cubic-bezier(.16,1,.3,1)}
+.hero .portrait::after{content:"";position:absolute;z-index:1;left:-2%;top:-4%;width:104%;aspect-ratio:1;border-radius:50%;
+  border:1px solid rgba(255,90,31,.28);box-shadow:inset 0 0 0 38px transparent,0 0 0 38px rgba(255,90,31,0);outline:1px solid rgba(242,240,234,.06);outline-offset:38px;pointer-events:none}
+@media (max-width:860px){
+  .hero .portrait{position:relative;right:auto;width:min(92vw,460px);margin:24px auto 0;height:auto}
+  .hero .hero-in{margin-top:0}
+}
+
+/* Claude Code style pixel buddy on the shoulder */
+.buddy{position:absolute;z-index:3;left:73%;top:39%;width:clamp(52px,6.2vw,86px);aspect-ratio:1;pointer-events:auto;animation:bob 3.2s ease-in-out infinite;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.buddy svg{width:100%;height:100%;overflow:visible;shape-rendering:crispEdges}
+.buddy .pupil{transition:transform .12s linear}
+.buddy:hover{animation-play-state:paused}
+.buddy.blink .eye{transform:scaleY(.15);transform-box:fill-box;transform-origin:center}
+@keyframes bob{50%{transform:translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){.buddy{animation:none}}
+/* v6 sizing: the portrait is sized by hero height so the head is never cropped and it stays right of the copy */
+@media (min-width:861px){
+  .hero .portrait{height:90%;width:auto;aspect-ratio:1000/1496;max-width:44vw;right:max(16px,calc((100vw - 1320px) / 2))}
+  .hero .portrait img{height:100%;width:100%;object-fit:contain;object-position:bottom}
+  .hero-copy{max-width:min(640px,52vw)}
+}
+
+/* role titles pop together with their timeline dot */
+.cv>li.hit h3.sp .spc{transform:none}
+.cv>li:not(.hit) h3.sp .spc{color:var(--acc)}
+
+/* XYRUS wordmark glitch: every 3 s (v4.js adds .glitch for ~420 ms) orange and white copies slice and shift */
+.wordmark span{position:relative}
+.wordmark span::before,.wordmark span::after{content:attr(data-t);position:absolute;inset:0;opacity:0;pointer-events:none}
+.wordmark span::before{color:var(--acc)}
+.wordmark span::after{color:#fff}
+.wordmark.glitch span{animation:gl-base .42s steps(1) both}
+.wordmark.glitch span::before{opacity:1;animation:gl-a .42s steps(1) both}
+.wordmark.glitch span::after{opacity:1;animation:gl-b .42s steps(1) both}
+@keyframes gl-base{0%,100%{transform:translateY(calc((1 - var(--wm,1)) * 100%))}20%{transform:translate(-4px,calc((1 - var(--wm,1)) * 100%))}60%{transform:translate(3px,calc((1 - var(--wm,1)) * 100%))}}
+@keyframes gl-a{0%{clip-path:inset(12% 0 70% 0);transform:translate(-14px,0)}25%{clip-path:inset(55% 0 22% 0);transform:translate(10px,0)}50%{clip-path:inset(30% 0 48% 0);transform:translate(-8px,0)}75%{clip-path:inset(78% 0 6% 0);transform:translate(16px,0)}100%{clip-path:inset(0 0 100% 0);transform:none}}
+@keyframes gl-b{0%{clip-path:inset(62% 0 18% 0);transform:translate(12px,0)}25%{clip-path:inset(8% 0 80% 0);transform:translate(-12px,0)}50%{clip-path:inset(44% 0 36% 0);transform:translate(6px,0)}75%{clip-path:inset(20% 0 66% 0);transform:translate(-16px,0)}100%{clip-path:inset(0 0 100% 0);transform:none}}
+@media (prefers-reduced-motion:reduce){.wordmark.glitch span,.wordmark.glitch span::before,.wordmark.glitch span::after{animation:none;opacity:0}}
+
+/* My stack v2: no box. Helix on the left, title and chip columns on the right, on the page background */
+.stack{margin-top:72px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,4vw,64px);align-items:center}
+.stack-helix{position:relative;height:clamp(460px,52vw,680px)}
+.stack-helix .stack-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab}
+.stack .stack-title{position:static;max-width:none;margin-bottom:22px}
+.stack .stack-title h3{text-shadow:none}
+.stack .stack-cols{grid-template-columns:1fr;border:0;border-radius:0;gap:22px;overflow:visible}
+.stack .stack-col{background:none;padding:0;border:0}
+.stack .stack-col+.stack-col{border:0;border-top:1px solid var(--line);padding-top:22px}
+.stack .stack-col h3{display:inline-block;margin:0 0 4px 8px;font-size:1.15rem}
+.stack .stack-k{display:inline-block}
+.stack .stack-sub{margin-bottom:12px}
+.stack-static .stack-helix{display:none}
+.stack-static{grid-template-columns:1fr}
+@media (max-width:860px){.stack{grid-template-columns:1fr}.stack-helix{height:420px;order:-1}}
+
+/* HERO v7: copy always sits above the photo and never shares space with it; backdrop is a soft orange glow
+   that falls off into black (like the studio light in the Flow shot), not a solid disc. */
+.hero-copy{position:relative;z-index:3}
+.hero .portrait::before{left:-6%;top:0;width:112%;border-radius:50%;box-shadow:none;
+  background:radial-gradient(closest-side,#FF7A45 0%,rgba(255,90,31,.95) 30%,rgba(214,72,18,.75) 52%,rgba(120,36,8,.4) 74%,transparent 100%)}
+.hero .portrait::after{left:4%;top:4%;width:92%;border-color:rgba(255,90,31,.16);outline-color:rgba(242,240,234,.04)}
+@media (min-width:1101px){
+  .hero .portrait{height:min(88%,780px);max-width:38vw}
+  .hero-copy{max-width:min(640px,50vw)}
+}
+@media (min-width:861px) and (max-width:1100px){
+  .hero{display:block;min-height:0}
+  .hero .portrait{position:relative;right:auto;height:auto;width:min(60vw,440px);max-width:none;margin:8px auto 0}
+  .hero .portrait img{height:auto}
+  .hero-copy{max-width:none}
+}
+
+/* buddy v2 */
+.buddy{animation:none;filter:drop-shadow(0 4px 0 rgba(0,0,0,.45));width:clamp(56px,6.4vw,92px);aspect-ratio:14/12;left:72%;top:37%}
+.buddy svg{display:block;width:100%;height:100%;image-rendering:pixelated;transform-origin:50% 100%}
+.buddy .lids{opacity:0}
+.buddy.blink .lids{opacity:1}
+.buddy.blink .eye{transform:none}
+.bub{position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%) scale(0);transform-origin:50% 100%;
+  min-width:1.9em;padding:.18em .45em .12em;font:900 clamp(.8rem,.6rem + .5vw,1.1rem)/1 ui-monospace,"Courier New",monospace;text-align:center;
+  color:#FF5A1F;background:#F2F0EA;border:3px solid #0B0B0B;box-shadow:3px 3px 0 #0B0B0B;transition:transform .18s steps(3)}
+.bub::after{content:"";position:absolute;left:50%;top:100%;width:6px;height:6px;margin-left:-3px;background:#0B0B0B}
+.buddy.talk .bub{transform:translateX(-50%) scale(1)}
+.buddy.a-jump svg{animation:bjump .9s steps(9)}
+.buddy.a-think svg{animation:bthink 1.6s steps(8)}
+.buddy.a-play svg{animation:bplay 1.5s steps(12)}
+.buddy.a-cute svg{animation:bcute 1.3s steps(10)}
+@keyframes bjump{0%{transform:scale(1.15,.8)}30%{transform:translateY(-55%) scale(.92,1.1)}60%{transform:translateY(0) scale(1.12,.86)}80%{transform:translateY(-12%)}100%{transform:none}}
+@keyframes bthink{0%,100%{transform:none}20%,80%{transform:rotate(-10deg)}50%{transform:rotate(-10deg) translateY(-4%)}}
+@keyframes bplay{0%,100%{transform:none}15%{transform:translate(-30%,-20%)}30%{transform:translate(-30%,0)}50%{transform:translate(25%,-25%) scaleX(-1)}65%{transform:translate(25%,0) scaleX(-1)}85%{transform:translate(0,-15%)}}
+@keyframes bcute{0%,100%{transform:none}20%{transform:rotate(8deg) scale(1.05)}40%{transform:rotate(-8deg) scale(1.05)}60%{transform:rotate(6deg)}80%{transform:scale(1.12,.9)}}
+@media (prefers-reduced-motion:reduce){.buddy svg{animation:none!important}}
+
+/* buddy v3 (Claude-mascot style): wide body, slit eyes; blink squashes the eyes, mouth shows when it acts */
+.buddy{aspect-ratio:16/10;width:clamp(64px,7vw,104px);top:39%}
+.buddy .mouth{opacity:0}
+.buddy.talk .mouth{opacity:1}
+.buddy.blink .pupil{transform:scaleY(.4);transform-box:fill-box;transform-origin:50% 70%}
+
+/* buddy v3 + pixel bubble: soft brown outline instead of heavy black; bubble is pixel art, no white box */
+.buddy{aspect-ratio:18/11;width:clamp(66px,7.2vw,108px);filter:drop-shadow(0 3px 0 rgba(0,0,0,.35))}
+.bub{min-width:0;width:38%;padding:0;background:none;border:0;box-shadow:none;bottom:calc(100% + 2px)}
+.bub::after{content:none}
+.bub svg{display:block;width:100%;height:auto;image-rendering:pixelated}
+
+/* HERO v8: real photo (profile.png) with its white background removed, natural color; head-and-shoulders crop */
+@media (min-width:1101px){.hero .portrait{aspect-ratio:1254/1192;height:auto;width:min(40vw,560px);max-width:none;bottom:0}}
+@media (min-width:861px) and (max-width:1100px){.hero .portrait{width:min(62vw,480px)}}
+.hero .portrait::before{left:4%;top:-6%;width:92%}
+.hero .portrait::after{left:10%;top:-2%;width:80%}
+.buddy{left:77%;top:66%}
+
+/* HERO v9: the original crossed-arms PNG (xyrus-arms.webp: white halo removed, natural color), sized by height */
+@media (min-width:1101px){.hero .portrait{aspect-ratio:573/858;height:min(90%,800px);width:auto;max-width:40vw}}
+@media (min-width:861px) and (max-width:1100px){.hero .portrait{aspect-ratio:573/858;width:min(56vw,420px)}}
+.hero .portrait::before{left:-8%;top:-2%;width:116%}
+.hero .portrait::after{left:-2%;top:2%;width:104%}
+.buddy{left:74%;top:44%}
+
+/* HERO v10: Flow scene-01 2K with its background removed (xyrus-2k.webp), natural color */
+@media (min-width:1101px){.hero .portrait{aspect-ratio:1200/1795;height:min(92%,820px);width:auto;max-width:40vw}}
+@media (min-width:861px) and (max-width:1100px){.hero .portrait{aspect-ratio:1200/1795;width:min(56vw,420px)}}
+.hero .portrait::before{left:-4%;top:-2%;width:108%}
+.hero .portrait::after{left:2%;top:2%;width:96%}
+.buddy{left:73%;top:37%}
+
+/* HERO v11 layout: two real columns (copy | portrait) so the headline can never run under the photo at any
+   window size (Edge at 125-150% display scaling gives ~1280x720 CSS px). Portrait height follows the viewport. */
+@media (min-width:1101px){
+  .hero{display:block;padding-bottom:0}
+  .hero .hero-in{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:clamp(24px,3vw,56px);min-height:min(100svh,940px)}
+  .hero-copy{align-self:center;max-width:none;padding-block:clamp(96px,12vh,140px) clamp(48px,8vh,96px)}
+  .hero h1{font-size:clamp(2.6rem,1rem + 3.6vw,5.4rem)}
+  .hero .portrait{position:relative;right:auto;bottom:auto;justify-self:end;height:min(84svh,800px);width:auto;max-width:none;aspect-ratio:1200/1795}
+}
+
+/* role titles: when their timeline dot pops, the title pops with it and a light sweeps across it */
+.cv>li h3{display:inline-block;transform-origin:0 60%;
+  background:linear-gradient(100deg,var(--ink) 0 38%,#fff 46%,var(--acc) 52%,var(--ink) 60% 100%);background-size:260% 100%;background-position:100% 0;
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.cv>li.hit h3{color:transparent;animation:titleshine 1.2s cubic-bezier(.4,0,.2,1) forwards,titlepop .7s cubic-bezier(.2,1.6,.4,1)}
+@keyframes titleshine{to{background-position:0 0}}
+@keyframes titlepop{0%{transform:scale(1)}35%{transform:scale(1.07)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.cv>li h3{background:none;color:var(--ink)}.cv>li.hit h3{animation:none}}
+
+/* HERO v12: headline sizes itself to its own column (container query) so it is never clipped;
+   wider hero container on big screens. */
+.hero-copy{container-type:inline-size}
+@media (min-width:1101px){
+  .hero .wrap.hero-in{max-width:min(1440px,calc(100vw - 64px))}
+  .hero h1{font-size:clamp(2.4rem,11.4cqi,5.6rem)}
+  .hero .portrait{height:min(80svh,780px)}
+}
+
+/* Mobile header: section links hide below 760px so the bar is one clean row (name + Email me);
+   the pill keeps a single-line shape. */
+@media (max-width:760px){
+  .top nav{display:none}
+  .top-in{flex-wrap:nowrap;gap:12px}
+  .top .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:1rem}
+  .top.pill .top-in::before{inset:0 1%}
+}
