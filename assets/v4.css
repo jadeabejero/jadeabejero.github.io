@@ -681,3 +681,8 @@ html{scroll-snap-type:y proximity}
   .steps-guide li{flex:1;min-width:0;padding:8px 8px!important;font-size:.72rem!important;line-height:1.25}
   .smart{padding:12px 14px}
 }
+
+/* buddy: heart action shows > < eyes */
+.buddy .squint{opacity:0}
+.buddy.a-cute .squint{opacity:1}
+.buddy.a-cute .pupil{opacity:0}

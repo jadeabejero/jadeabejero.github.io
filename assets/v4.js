@@ -281,7 +281,8 @@ document.addEventListener('click', (e) => {
   const COL = { D: '#5A2410', L: '#EE9A78', O: '#D97757', S: '#B95D3E', P: '#E9867A' };
   b.innerHTML = `<span class="bub" aria-hidden="true"></span><svg viewBox="0 0 18 11" shape-rendering="crispEdges">${px(BODY, COL)}
     <rect class="pupil" data-x="6" x="6" y="3" width="1.02" height="2.02" fill="#1A0C06"/><rect class="pupil" data-x="11" x="11" y="3" width="1.02" height="2.02" fill="#1A0C06"/>
-    <rect class="mouth" x="8" y="5" width="2.02" height="1.02" fill="#1A0C06"/></svg>`;
+    <rect class="mouth" x="8" y="5" width="2.02" height="1.02" fill="#1A0C06"/>
+    <g class="squint" fill="#1A0C06"><rect x="5" y="2.5" width="1.02" height="1.02"/><rect x="6" y="3.5" width="1.02" height="1.02"/><rect x="5" y="4.5" width="1.02" height="1.02"/><rect x="12" y="2.5" width="1.02" height="1.02"/><rect x="11" y="3.5" width="1.02" height="1.02"/><rect x="12" y="4.5" width="1.02" height="1.02"/></g></svg>`;
   // pixel speech bubble: stepped corners, thin dark border, orange fill, 5x5 glyph
   const GLYPH = {
     '?': ['.###.', '....#', '..##.', '.....', '..#..'],
