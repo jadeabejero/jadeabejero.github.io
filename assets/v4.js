@@ -355,3 +355,25 @@ document.addEventListener('click', (e) => {
   const wm = document.querySelector('.wordmark'); if (!wm || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   setInterval(() => { wm.classList.add('glitch'); setTimeout(() => wm.classList.remove('glitch'), 430); }, 3000);
 })();
+
+/* Back to top: halves close over the page, jump to the top unseen, replay the JXA intro, then split open */
+(() => {
+  const btn = document.querySelector('.to-top'); const first = document.querySelector('.pre'); if (!btn || !first) return;
+  const root = document.documentElement, template = first.cloneNode(true);
+  template.classList.remove('done', 'enter');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let busy = false;
+  const jumpTop = () => { const sb = root.style.scrollBehavior, sn = root.style.scrollSnapType; root.style.scrollBehavior = 'auto'; root.style.scrollSnapType = 'none'; window.scrollTo(0, 0); root.style.scrollBehavior = sb; root.style.scrollSnapType = sn; };
+  btn.addEventListener('click', () => {
+    if (busy) return;
+    if (reduce) { jumpTop(); return; }
+    busy = true;
+    const cover = template.cloneNode(true); cover.classList.add('enter');
+    document.querySelector('.pre').replaceWith(cover); root.classList.remove('no-pre');
+    setTimeout(() => {
+      jumpTop();
+      const show = template.cloneNode(true); cover.replaceWith(show);   // fresh copy restarts the letter animations
+      setTimeout(() => { show.classList.add('done'); setTimeout(() => { root.classList.add('no-pre'); busy = false; }, 900); }, 3100);
+    }, 650);
+  });
+})();
